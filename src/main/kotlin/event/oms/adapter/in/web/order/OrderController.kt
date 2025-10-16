@@ -1,8 +1,13 @@
 package event.oms.adapter.`in`.web.order
 
+import event.oms.adapter.`in`.web.common.BaseResponse
+import event.oms.adapter.`in`.web.order.request.OrderRequest
+import event.oms.adapter.`in`.web.order.response.OrderResponse
 import event.oms.application.port.`in`.GetOrderQuery
 import event.oms.application.port.`in`.OrderUseCase
 import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,7 +20,25 @@ class OrderController(
     private val getOrderQuery: GetOrderQuery,
 
 ) {
+    @PostMapping
+    fun NewOrder(@Valid @RequestBody request: OrderRequest):  BaseResponse<OrderResponse> {
+        // 1. DTO를 Application 계층의 Command 객체로 변환
+        val command = request.toCommand()
+        // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
+        val createdOrder = orderUseCase.order(command)
+        // 3. Domain 모델을 응답 DTO로 변환
+        val response = OrderResponse.from(createdOrder)
+        return BaseResponse.created(response)
+    }
 
-
+    @GetMapping("/{orderId}")
+    fun getOrderDetails(@PathVariable orderId: Long): BaseResponse<OrderResponse> {
+        // 1. Inbound Port(Query) 호출
+        val order = getOrderQuery.getOrder(orderId)
+            ?: throw NoSuchElementException("ID가 ${orderId}인 주문을 찾을 수 없습니다.")
+        // 2. Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
+        val response = OrderResponse.from(order)
+        return BaseResponse.ok(response)
+    }
 
 }
