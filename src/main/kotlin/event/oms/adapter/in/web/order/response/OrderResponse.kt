@@ -21,7 +21,7 @@ data class OrderResponse(
                 status     = order.status,
                 orderDate  = order.orderDate,
                 totalPrice = order.orderItems.sumOf { it.price.multiply(BigDecimal.valueOf(it.quantity.toLong()))},
-                items = order.orderItems.map { OrderItemResponse(it.productId, it.price, it.quantity) }
+                items      = order.orderItems.map { OrderItemResponse(it.productId, it.price, it.quantity) }
             )
         }
 

@@ -21,7 +21,7 @@ class OrderController(
 
 ) {
     @PostMapping
-    fun NewOrder(@Valid @RequestBody request: OrderRequest):  BaseResponse<OrderResponse> {
+    fun newOrder(@Valid @RequestBody request: OrderRequest):  BaseResponse<OrderResponse> {
         // 1. DTO를 Application 계층의 Command 객체로 변환
         val command = request.toCommand()
         // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행

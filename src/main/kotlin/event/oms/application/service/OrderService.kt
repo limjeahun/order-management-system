@@ -6,6 +6,7 @@ import event.oms.application.port.out.SaveOrderPort
 import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderItem
 import event.oms.domain.model.order.OrderStatus
+import event.oms.domain.model.order.ReceiverInfo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
@@ -27,10 +28,15 @@ class OrderService(
         }
 
         var newOrder = Order(
-            memberId   = command.memberId,
-            orderItems = items,
-            status     = OrderStatus.PENDING,
-            orderDate  = LocalDateTime.now()
+            memberId     = command.memberId,
+            orderItems   = items,
+            status       = OrderStatus.PENDING,
+            orderDate    = LocalDateTime.now(),
+            receiverInfo =  ReceiverInfo(
+                name    = command.receiverInfo.name,
+                phone   = command.receiverInfo.phone,
+                address = command.receiverInfo.address
+            )
         )
 
         return saveOrderPort.save(newOrder)
