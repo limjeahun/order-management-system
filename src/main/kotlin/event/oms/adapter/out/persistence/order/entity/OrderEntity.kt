@@ -1,6 +1,8 @@
 package event.oms.adapter.out.persistence.order.entity
 
+import event.oms.adapter.out.persistence.order.embeddable.ReceiverInfoEmbeddable
 import event.oms.domain.model.order.OrderStatus
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -18,6 +20,9 @@ class OrderEntity(
     val memberId: Long,
     @Enumerated(EnumType.STRING)
     var status: OrderStatus,
-    val orderDate: LocalDateTime
+    val orderDate: LocalDateTime,
+    @Embedded
+    val receiverInfo: ReceiverInfoEmbeddable,
 ) {
+
 }

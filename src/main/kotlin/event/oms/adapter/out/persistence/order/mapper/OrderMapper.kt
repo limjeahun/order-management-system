@@ -1,9 +1,11 @@
 package event.oms.adapter.out.persistence.order.mapper
 
+import event.oms.adapter.out.persistence.order.embeddable.ReceiverInfoEmbeddable
 import event.oms.adapter.out.persistence.order.entity.OrderEntity
 import event.oms.adapter.out.persistence.order.entity.OrderItemEntity
 import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderItem
+import event.oms.domain.model.order.ReceiverInfo
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,7 +19,12 @@ class OrderMapper {
             id = order.id,
             memberId = order.memberId,
             status = order.status,
-            orderDate = order.orderDate
+            orderDate = order.orderDate,
+            receiverInfo = ReceiverInfoEmbeddable(
+                receiverName = order.receiverInfo.name,
+                receiverPhone = order.receiverInfo.phone,
+                receiverAddress = order.receiverInfo.address
+            ),
         )
 
         val orderItemEntities = order.orderItems.map { domainItem ->
@@ -53,7 +60,12 @@ class OrderMapper {
                     price = item.price,
                     quantity = item.quantity
                 )
-            }
+            },
+            receiverInfo = ReceiverInfo( // Embeddable 객체 매핑
+                name = orderEntity.receiverInfo.receiverName,
+                phone = orderEntity.receiverInfo.receiverPhone,
+                address = orderEntity.receiverInfo.receiverAddress
+            ),
         )
     }
 
