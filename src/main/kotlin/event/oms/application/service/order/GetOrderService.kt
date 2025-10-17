@@ -1,7 +1,7 @@
-package event.oms.application.service
+package event.oms.application.service.order
 
-import event.oms.application.port.`in`.GetOrderQuery
-import event.oms.application.port.out.LoadOrderPort
+import event.oms.application.port.`in`.order.GetOrderQuery
+import event.oms.application.port.out.order.LoadOrderPort
 import event.oms.domain.model.order.Order
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

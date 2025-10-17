@@ -3,8 +3,8 @@ package event.oms.adapter.`in`.web.order
 import event.oms.adapter.`in`.web.common.BaseResponse
 import event.oms.adapter.`in`.web.order.request.OrderRequest
 import event.oms.adapter.`in`.web.order.response.OrderResponse
-import event.oms.application.port.`in`.GetOrderQuery
-import event.oms.application.port.`in`.OrderUseCase
+import event.oms.application.port.`in`.order.GetOrderQuery
+import event.oms.application.port.`in`.order.OrderUseCase
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,7 +19,7 @@ class OrderController(
     private val orderUseCase: OrderUseCase,
     private val getOrderQuery: GetOrderQuery,
 
-) {
+    ) {
     @PostMapping
     fun newOrder(@Valid @RequestBody request: OrderRequest):  BaseResponse<OrderResponse> {
         // 1. DTO를 Application 계층의 Command 객체로 변환

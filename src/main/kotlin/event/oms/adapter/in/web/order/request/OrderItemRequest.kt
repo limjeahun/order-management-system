@@ -1,6 +1,6 @@
 package event.oms.adapter.`in`.web.order.request
 
-import event.oms.application.port.`in`.OrderItemCommand
+import event.oms.application.port.`in`.order.OrderItemCommand
 import jakarta.validation.constraints.Min
 import org.jetbrains.annotations.NotNull
 

@@ -1,8 +1,8 @@
-package event.oms.application.service
+package event.oms.application.service.order
 
-import event.oms.application.port.`in`.OrderCommand
-import event.oms.application.port.`in`.OrderUseCase
-import event.oms.application.port.out.SaveOrderPort
+import event.oms.application.port.`in`.order.OrderCommand
+import event.oms.application.port.`in`.order.OrderUseCase
+import event.oms.application.port.out.order.SaveOrderPort
 import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderItem
 import event.oms.domain.model.order.OrderStatus

@@ -1,6 +1,6 @@
 package event.oms.adapter.`in`.web.order.request
 
-import event.oms.application.port.`in`.ReceiverInfoCommand
+import event.oms.application.port.`in`.order.ReceiverInfoCommand
 import jakarta.validation.constraints.NotEmpty
 
 data class ReceiverInfoRequest(

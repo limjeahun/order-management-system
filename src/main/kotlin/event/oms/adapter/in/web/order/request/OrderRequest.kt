@@ -1,6 +1,6 @@
 package event.oms.adapter.`in`.web.order.request
 
-import event.oms.application.port.`in`.OrderCommand
+import event.oms.application.port.`in`.order.OrderCommand
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull

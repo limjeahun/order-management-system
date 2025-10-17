@@ -3,8 +3,8 @@ package event.oms.adapter.out.persistence.order
 import event.oms.adapter.out.persistence.order.mapper.OrderMapper
 import event.oms.adapter.out.persistence.order.repository.OrderItemJpaRepository
 import event.oms.adapter.out.persistence.order.repository.OrderJpaRepository
-import event.oms.application.port.out.LoadOrderPort
-import event.oms.application.port.out.SaveOrderPort
+import event.oms.application.port.out.order.LoadOrderPort
+import event.oms.application.port.out.order.SaveOrderPort
 import event.oms.domain.model.order.Order
 import org.springframework.stereotype.Component
 

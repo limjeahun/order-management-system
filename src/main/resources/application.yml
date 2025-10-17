@@ -1,0 +1,32 @@
+# ===============================================
+# SPRING BOOT APPLICATION CONFIGURATION
+# ===============================================
+spring:
+  application:
+    name: oms #
+
+  # ===============================================
+  # DATABASE (MySQL) CONFIGURATION
+  # ===============================================
+  datasource:
+    url: jdbc:mysql://localhost:3306/write_qr?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useUnicode=true
+    username: armada
+    password: armada
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # ===============================================
+  # JPA & HIBERNATE CONFIGURATION
+  # ===============================================
+  jpa:
+    hibernate:
+      # create: 기존 테이블 삭제 후 다시 생성 (테스트용)
+      # update: 변경된 부분만 반영 (개발용)
+      # none: 아무것도 하지 않음 (운영 환경 추천)
+      ddl-auto: none
+    # 실행되는 SQL 쿼리를 콘솔에 보여줌
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        use_sql_comments: true
