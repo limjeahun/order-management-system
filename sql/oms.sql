@@ -24,5 +24,6 @@ CREATE TABLE product (
     id    BIGINT NOT NULL,
     name  VARCHAR(255) NOT NULL,
     price DECIMAL(19, 2) NOT NULL,
+    stock BIGINT NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
