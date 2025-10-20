@@ -5,13 +5,12 @@ import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.out.order.SaveOrderPort
 import event.oms.application.port.out.product.LoadProductPort
 import event.oms.domain.model.order.Order
-import event.oms.domain.model.order.OrderItem
 import event.oms.domain.model.order.OrderStatus
 import event.oms.domain.model.order.ReceiverInfo
 import event.oms.domain.service.OrderPriceCalculator
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.math.BigDecimal
 import java.time.LocalDateTime
 
 
@@ -32,6 +31,9 @@ class OrderService(
         }
         // 3. 재고 검증 및 가격 확인
         val orderItems = orderPriceCalculator.calculateOrderItems(itemRequests, products)
+
+        log.info("--- 주문 정보: orderItems = {} ---", orderItems)
+
         // 4. 주문 생성
         val newOrder = Order(
             memberId     = command.memberId,
@@ -46,6 +48,10 @@ class OrderService(
         )
         // 5. 주문 저장
         return saveOrderPort.save(newOrder)
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(OrderService::class.java)
     }
 
 }
