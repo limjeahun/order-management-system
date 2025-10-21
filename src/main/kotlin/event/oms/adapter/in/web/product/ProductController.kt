@@ -25,4 +25,6 @@ class ProductController(
         val response = ProductResponse.from(createdProduct)
         return BaseResponse.created(response).toResponseEntity()
     }
+
+
 }
