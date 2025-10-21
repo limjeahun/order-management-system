@@ -42,15 +42,16 @@ data class BaseResponse<T>(
                 data    = data
             )
         }
-    }
 
-    /**
-     * BaseResponse 객체를 ResponseEntity로 변환하는 확장 함수
-     */
-    fun <T> BaseResponse<T>.toResponseEntity(): ResponseEntity<BaseResponse<T>> {
-        return ResponseEntity
-            .status(this.code)
-            .body(this)
+        /**
+         * BaseResponse 객체를 ResponseEntity로 변환하는 확장 함수
+         */
+        fun <T> BaseResponse<T>.toResponseEntity(): ResponseEntity<BaseResponse<T>> {
+            return ResponseEntity
+                .status(this.code)
+                .body(this)
+        }
+
     }
 
 }

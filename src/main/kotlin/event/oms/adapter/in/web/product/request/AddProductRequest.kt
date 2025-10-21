@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
 data class AddProductRequest(
-    @field:NotEmpty(message = "상품코드는 필수입니다.")
+    @field:NotNull(message = "상품코드는 필수입니다.")
     val id: Long,
 
     @field:NotEmpty(message = "상품명은 필수입니다.")
