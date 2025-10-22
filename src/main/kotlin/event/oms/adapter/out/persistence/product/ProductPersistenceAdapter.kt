@@ -40,4 +40,12 @@ class ProductPersistenceAdapter(
             .map { productMapper.toDomain(it) } // 조회 성공 시 도메인 객체로 변환
             .orElse(null)
     }
+
+    /**
+     * 제품 목록 조회
+     */
+    override fun findAll(): List<Product> {
+        return productRepository.findAll()
+            .map { productMapper.toDomain(it) }
+    }
 }

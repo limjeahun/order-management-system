@@ -8,4 +8,5 @@ import event.oms.domain.model.product.Product
 interface LoadProductPort {
     fun findAllByIds(productIds: List<Long>): List<Product>
     fun findById(productId: Long): Product?
+    fun findAll(): List<Product>
 }
