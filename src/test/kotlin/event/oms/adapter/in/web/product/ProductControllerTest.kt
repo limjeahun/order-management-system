@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.math.BigDecimal
 
@@ -119,7 +120,7 @@ internal class ProductControllerTest @Autowired constructor (
 
         // when
         val resultActions = mockMvc.perform(
-            post("/api/v1/products/{productId}")
+            put("/api/v1/products/{productId}", productId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
@@ -128,6 +129,8 @@ internal class ProductControllerTest @Autowired constructor (
         resultActions
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+            .andExpect(jsonPath("$.data.productId").value(productId))
+            .andExpect(jsonPath("$.data.name").value(request.name))
 
         then(updateProductUseCase).should().updateProduct(expectedCommand)
     }
