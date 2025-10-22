@@ -35,5 +35,9 @@ class OrderPersistenceAdapter(
         return orderMapper.toDomain(orderJpaEntity, orderItemJpaEntities)
     }
 
+    override fun findAllByMemberId(memberId: Long): List<Order> {
+        TODO("Not yet implemented")
+    }
+
 
 }

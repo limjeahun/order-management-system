@@ -41,4 +41,12 @@ class OrderController(
         return BaseResponse.ok(response).toResponseEntity()
     }
 
+    /*
+    @GetMapping("/{memberId}")
+    fun getAllOrders(@PathVariable memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
+
+    }
+    */
+
+
 }
