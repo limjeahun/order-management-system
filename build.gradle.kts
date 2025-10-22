@@ -28,8 +28,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    runtimeOnly("com.mysql:mysql-connector-j") // MySQL 드라이버
-
+    // MySQL 드라이버
+    runtimeOnly("com.mysql:mysql-connector-j")
+    // Swagger (Springdoc OpenAPI) 의존성 추가
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

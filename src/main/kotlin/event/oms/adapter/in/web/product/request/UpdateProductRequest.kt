@@ -1,17 +1,16 @@
 package event.oms.adapter.`in`.web.product.request
 
-import event.oms.application.port.`in`.product.AddProductCommand
+import event.oms.application.port.`in`.product.UpdateProductCommand
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.DecimalMin
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
-@Schema(description = "제품등록 요청 정보")
-data class AddProductRequest(
-    @field:NotNull(message = "제품코드는 필수입니다.")
-    val id: Long,
 
+@Schema(description = "제품수정 요청 정보")
+data class UpdateProductRequest(
     @field:NotEmpty(message = "제품명은 필수입니다.")
     val name: String,
 
@@ -20,15 +19,18 @@ data class AddProductRequest(
     val price: BigDecimal,
 
     @field:NotNull(message = "수량은 필수입니다.")
-    @field:DecimalMin(value = "0", inclusive = false, message = "수량은 0보다 커야 합니다.")
+    @field:Min(value = 0, message = "수량은 0 이상이어야 합니다.")
     val stock: Int,
 ) {
-    fun toCommand(): AddProductCommand {
-        return AddProductCommand(
-            id    = this.id,
-            name  = this.name,
-            price = this.price,
-            stock = this.stock,
+    /**
+     * UpdateProductCommand 변환
+     */
+    fun toCommand(id: Long): UpdateProductCommand {
+        return UpdateProductCommand(
+            id    = id,
+            name  = name,
+            price = price,
+            stock = stock,
         )
     }
 }

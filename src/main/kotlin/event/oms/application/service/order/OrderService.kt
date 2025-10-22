@@ -7,7 +7,7 @@ import event.oms.application.port.out.product.LoadProductPort
 import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderStatus
 import event.oms.domain.model.order.ReceiverInfo
-import event.oms.domain.service.OrderPriceCalculator
+import event.oms.domain.service.order.OrderPriceCalculator
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

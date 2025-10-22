@@ -31,4 +31,13 @@ class ProductPersistenceAdapter(
         return productRepository.findAllById(productIds)
             .map { productMapper.toDomain(it) }
     }
+
+    /**
+     * 제품 상세 조회
+     */
+    override fun findById(productId: Long): Product? {
+        return productRepository.findById(productId) // JpaRepository 기본 제공 메서드 사용
+            .map { productMapper.toDomain(it) } // 조회 성공 시 도메인 객체로 변환
+            .orElse(null)
+    }
 }

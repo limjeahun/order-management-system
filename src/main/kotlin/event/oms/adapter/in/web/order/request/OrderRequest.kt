@@ -1,10 +1,12 @@
 package event.oms.adapter.`in`.web.order.request
 
 import event.oms.application.port.`in`.order.OrderCommand
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 
+@Schema(description = "주문 요청 정보")
 data class OrderRequest(
     @field:NotNull(message = "회원 ID는 필수입니다.")
     val memberId: Long,

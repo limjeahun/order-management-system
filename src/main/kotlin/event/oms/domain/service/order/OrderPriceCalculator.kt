@@ -1,4 +1,4 @@
-package event.oms.domain.service
+package event.oms.domain.service.order
 
 import event.oms.domain.model.order.OrderItem
 import event.oms.domain.model.product.Product
@@ -19,7 +19,7 @@ class OrderPriceCalculator {
     ): List<OrderItem> {
         return itemRequests.map { request ->
             val product = products.find { it.id == request.productId }
-                ?: throw NoSuchElementException("상품 정보를 찾을 수 없습니다: ${request.productId}")
+                ?: throw NoSuchElementException("제품 정보를 찾을 수 없습니다: ${request.productId}")
             // 재고 확인
             if (product.stock < request.quantity) {
                 throw IllegalArgumentException(
