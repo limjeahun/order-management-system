@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 class GetOrderService(
     private val loadOrderPort: LoadOrderPort
 ) : GetOrderQuery {
-    override fun getOrder(orderId: Long): Order? {
+    override fun getOrder(orderId: Long): Order {
         return loadOrderPort.findOrderById(orderId)
+            ?: throw NoSuchElementException("ID가 ${orderId}인 주문을 찾을 수 없습니다.")
     }
 }

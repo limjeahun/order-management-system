@@ -17,15 +17,23 @@ class OpenApiConfig {
             .version("v1.0.0")
             .description("주문 관리 시스템(OMS) API 명세서")
         return OpenAPI()
-            .components(Components()) // 스키마 등 공통 컴포넌트 설정 (필요시)
-            .info(info)               // 위에서 정의한 Info 객체 설정
+            .components(Components())
+            .info(info)
     }
 
     @Bean
-    fun groupOpenAPI(): GroupedOpenApi {
+    fun ordersGroupOpenAPI(): GroupedOpenApi {
         return GroupedOpenApi.builder()
-            .group("OMS")
-            .pathsToMatch("/api/v1/**")
+            .group("orders")
+            .pathsToMatch("/api/v1/orders/**")
+            .build()
+    }
+
+    @Bean
+    fun productsGroupOpenAPI(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("products")
+            .pathsToMatch("/api/v1/products/**")
             .build()
     }
 

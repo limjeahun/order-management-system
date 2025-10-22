@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*
 class ProductController(
     private val addProductUseCase   : AddProductUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
-) {
+): ProductSpec {
 
     @PostMapping
-    fun addProduct(@Valid @RequestBody request: AddProductRequest): ResponseEntity<BaseResponse<ProductResponse>> {
+    override fun addProduct(@Valid @RequestBody request: AddProductRequest): ResponseEntity<BaseResponse<ProductResponse>> {
         val command = request.toCommand()
         val createdProduct = addProductUseCase.addProduct(command)
         val response = ProductResponse.from(createdProduct)
@@ -27,7 +27,7 @@ class ProductController(
     }
 
     @PutMapping("/{productId}")
-    fun updateProduct(
+    override fun updateProduct(
         @PathVariable productId: Long,
         @Valid @RequestBody request: UpdateProductRequest,
         ): ResponseEntity<BaseResponse<ProductResponse>> {

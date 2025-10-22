@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.RestController
 class OrderController(
     private val orderUseCase: OrderUseCase,
     private val getOrderQuery: GetOrderQuery,
-
-    ) {
+    ): OrderSpec {
     @PostMapping
-    fun newOrder(@Valid @RequestBody request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>> {
+    override fun newOrder(@Valid @RequestBody request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>> {
         // 1. Application 계층의 Command 객체로 변환
         val command = request.toCommand()
         // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
@@ -34,10 +33,9 @@ class OrderController(
     }
 
     @GetMapping("/{orderId}")
-    fun getOrderDetails(@PathVariable orderId: Long): ResponseEntity<BaseResponse<OrderResponse>> {
+    override fun getOrderDetails(@PathVariable orderId: Long): ResponseEntity<BaseResponse<OrderResponse>> {
         // 1. Inbound Port(Query) 호출
         val order = getOrderQuery.getOrder(orderId)
-            ?: throw NoSuchElementException("ID가 ${orderId}인 주문을 찾을 수 없습니다.")
         // 2. Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
         val response = OrderResponse.from(order)
         return BaseResponse.ok(response).toResponseEntity()
