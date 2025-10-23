@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -43,9 +44,9 @@ class OrderController(
         return BaseResponse.ok(response).toResponseEntity()
     }
 
-    @GetMapping("/{memberId}")
-    override fun getAllOrders(@PathVariable memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
-        val orders = getOrderListQuery.getAllOrders(memberId)
+    @GetMapping
+    override fun getAllOrdersByMember(@RequestParam memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
+        val orders = getOrderListQuery.getAllOrdersByMember(memberId)
         val responses = orders.map { OrderResponse.from(it) }
         return BaseResponse.ok(responses).toResponseEntity()
     }

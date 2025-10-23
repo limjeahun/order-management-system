@@ -14,7 +14,7 @@ class GetOrderListService(
     /**
      * 회원주문 목록 조회
      */
-    override fun getAllOrders(memberId: Long): List<Order> {
+    override fun getAllOrdersByMember(memberId: Long): List<Order> {
         return loadOrderPort.findAllByMemberId(memberId)
 
     }

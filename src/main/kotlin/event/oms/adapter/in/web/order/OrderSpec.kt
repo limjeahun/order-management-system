@@ -4,6 +4,7 @@ import event.oms.adapter.`in`.web.common.BaseResponse
 import event.oms.adapter.`in`.web.order.request.OrderRequest
 import event.oms.adapter.`in`.web.order.response.OrderResponse
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 
@@ -14,8 +15,14 @@ interface OrderSpec {
     fun newOrder(request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>>
 
     @Operation(summary = "주문상세 정보 조회", description = "시스템에 등록된 주문상세 정보를 조회합니다.")
-    fun getOrderDetails(orderId: Long): ResponseEntity<BaseResponse<OrderResponse>>
+    fun getOrderDetails(
+        @Parameter(description = "조회할 주문 ID")
+        orderId: Long
+    ): ResponseEntity<BaseResponse<OrderResponse>>
 
     @Operation(summary = "회원 주문목록 정보 조회", description = "시스템에 등록된 주문목록 정보를 조회합니다.")
-    fun getAllOrders(memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>>
+    fun getAllOrdersByMember(
+        @Parameter(description = "조회할 회원 ID")
+        memberId: Long
+    ): ResponseEntity<BaseResponse<List<OrderResponse>>>
 }
