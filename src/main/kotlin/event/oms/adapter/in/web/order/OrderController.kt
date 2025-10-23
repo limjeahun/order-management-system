@@ -4,6 +4,7 @@ import event.oms.adapter.`in`.web.common.BaseResponse
 import event.oms.adapter.`in`.web.common.BaseResponse.Companion.toResponseEntity
 import event.oms.adapter.`in`.web.order.request.OrderRequest
 import event.oms.adapter.`in`.web.order.response.OrderResponse
+import event.oms.application.port.`in`.order.GetOrderListQuery
 import event.oms.application.port.`in`.order.GetOrderQuery
 import event.oms.application.port.`in`.order.OrderUseCase
 import jakarta.validation.Valid
@@ -18,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/orders")
 class OrderController(
-    private val orderUseCase: OrderUseCase,
-    private val getOrderQuery: GetOrderQuery,
+    private val orderUseCase     : OrderUseCase,
+    private val getOrderQuery    : GetOrderQuery,
+    private val getOrderListQuery: GetOrderListQuery,
     ): OrderSpec {
     @PostMapping
     override fun newOrder(@Valid @RequestBody request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>> {
@@ -41,12 +43,11 @@ class OrderController(
         return BaseResponse.ok(response).toResponseEntity()
     }
 
-    /*
     @GetMapping("/{memberId}")
-    fun getAllOrders(@PathVariable memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
-
+    override fun getAllOrders(@PathVariable memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
+        val orders = getOrderListQuery.getAllOrders(memberId)
+        val responses = orders.map { OrderResponse.from(it) }
+        return BaseResponse.ok(responses).toResponseEntity()
     }
-    */
-
 
 }

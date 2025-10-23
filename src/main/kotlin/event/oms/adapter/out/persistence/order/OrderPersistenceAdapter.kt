@@ -18,9 +18,13 @@ class OrderPersistenceAdapter(
      * 주문 생성
      */
     override fun save(order: Order): Order {
-        val orderEntity = orderMapper.toEntity(order)
-        val savedOrderEntity = orderRepository.save(orderEntity.first)
-        val savedOrderItemsEntity  = orderItemRepository.saveAll(orderEntity.second)
+        // orderEntity 변환 및 저장
+        val orderEntity      = orderMapper.toOrderEntity(order)
+        val savedOrderEntity = orderRepository.save(orderEntity)
+        val generatedOrderId = savedOrderEntity.id!!
+        // ItemsEntity 변환 및 저장
+        val orderItemEntities     = orderMapper.toOrderItemEntities(order, generatedOrderId)
+        val savedOrderItemsEntity = orderItemRepository.saveAll(orderItemEntities)
         // 자식 엔티티(OrderItem)들도 여기서 함께 저장 필요
         return orderMapper.toDomain(savedOrderEntity, savedOrderItemsEntity)
     }
@@ -29,14 +33,21 @@ class OrderPersistenceAdapter(
      * 주문번호로 주문 조회
      */
     override fun findOrderById(orderId: Long): Order? {
-        val orderJpaEntity = orderRepository.findById(orderId).orElse(null) ?: return null
+        val orderJpaEntity = orderRepository.findById(orderId).orElse(null)
         val orderItemJpaEntities = orderItemRepository.findByOrderId(orderId)
         // 조회된 엔티티들을 도메인 모델로 변환하여 반환
         return orderMapper.toDomain(orderJpaEntity, orderItemJpaEntities)
     }
 
+    /**
+     * 회원주문 목록 조회
+     */
     override fun findAllByMemberId(memberId: Long): List<Order> {
-        TODO("Not yet implemented")
+        val orderJpaEntities = orderRepository.findAllByMemberId(memberId)
+        return orderJpaEntities.map { order ->
+            val orderItemJpaEntities = orderItemRepository.findByOrderId(order.id!!)
+            orderMapper.toDomain(order, orderItemJpaEntities)
+        }
     }
 
 

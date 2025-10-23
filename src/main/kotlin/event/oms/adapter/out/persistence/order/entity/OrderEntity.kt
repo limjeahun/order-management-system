@@ -16,11 +16,11 @@ import java.time.LocalDateTime
 @Table(name = "orders")
 class OrderEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-    val memberId: Long,
+    val id          : Long? = null,
+    val memberId    : Long,
     @Enumerated(EnumType.STRING)
-    var status: OrderStatus,
-    val orderDate: LocalDateTime,
+    var status      : OrderStatus,
+    val orderDate   : LocalDateTime,
     @Embedded
     val receiverInfo: ReceiverInfoEmbeddable,
 ) {

@@ -11,34 +11,34 @@ import org.springframework.stereotype.Component
 @Component
 class OrderMapper {
     /**
-     * 도메인 Order 객체를 JPA OrderJpaEntity 객체로 변환합니다.
-     * DB에 저장하기 위해 사용됩니다.
+     * 도메인 Order 객체를 JPA OrderJpaEntity 객체로 변환
      */
-    fun toEntity(order: Order): Pair<OrderEntity, List<OrderItemEntity>> {
-        val orderJpaEntity = OrderEntity(
-            id = order.id,
-            memberId = order.memberId,
-            status = order.status,
-            orderDate = order.orderDate,
+    fun toOrderEntity(order: Order): OrderEntity {
+        return OrderEntity(
+            id           = order.id,
+            memberId     = order.memberId,
+            status       = order.status,
+            orderDate    = order.orderDate,
             receiverInfo = ReceiverInfoEmbeddable(
-                receiverName = order.receiverInfo.name,
-                receiverPhone = order.receiverInfo.phone,
+                receiverName    = order.receiverInfo.name,
+                receiverPhone   = order.receiverInfo.phone,
                 receiverAddress = order.receiverInfo.address
             ),
         )
+    }
 
-        val orderItemEntities = order.orderItems.map { domainItem ->
+    /**
+     * 도메인 Order 객체를 JPA List<OrderItemEntity> 객체로 변환
+     */
+    fun toOrderItemEntities(order: Order, orderId: Long): List<OrderItemEntity> {
+        return order.orderItems.map { domainItem ->
             OrderItemEntity(
-                // id는 DB에서 자동 생성되므로 null
-                orderId = orderJpaEntity.id ?: 0L, // 아직 ID가 없지만 관계 설정
+                orderId   = orderId,
                 productId = domainItem.productId,
-                price = domainItem.price,
-                quantity = domainItem.quantity
+                price     = domainItem.price,
+                quantity  = domainItem.quantity
             )
         }
-
-        // Order 엔티티와 OrderItem 엔티티 리스트를 함께 반환
-        return Pair(orderJpaEntity, orderItemEntities)
     }
 
     /**

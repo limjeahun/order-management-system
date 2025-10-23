@@ -6,12 +6,12 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class OrderResponse(
-    val orderId: Long,
-    val memberId: Long,
-    val status: OrderStatus,
-    val orderDate: LocalDateTime,
+    val orderId   : Long,
+    val memberId  : Long,
+    val status    : OrderStatus,
+    val orderDate : LocalDateTime,
     val totalPrice: BigDecimal,
-    val items: List<OrderItemResponse>,
+    val items     : List<OrderItemResponse>,
 ) {
     companion object {
         fun from(order: Order): OrderResponse {

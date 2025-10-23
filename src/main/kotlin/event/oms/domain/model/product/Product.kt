@@ -25,4 +25,22 @@ class Product(
         this.price = changePrice
         this.stock = changeStock
     }
+
+    /**
+     * 재고를 차감
+     */
+    fun decreaseStock(quantity: Int) {
+        // 수량 확인
+        if (quantity <= 0) {
+            throw IllegalArgumentException("차감할 수량은 0보다 커야 합니다.")
+        }
+
+        val remainingStock = this.stock - quantity
+        // 재고 확인
+        if (remainingStock < 0) {
+            throw IllegalArgumentException("재고가 부족합니다. (ID: ${this.id}, 현재: ${this.stock}, 요청: ${quantity})")
+        }
+        this.stock = remainingStock
+    }
+
 }

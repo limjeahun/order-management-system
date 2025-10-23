@@ -25,6 +25,15 @@ class ProductPersistenceAdapter(
     }
 
     /**
+     * 여러 제품 정보를 등록
+     */
+    override fun saveAll(products: List<Product>): List<Product> {
+        val productEntities = products.map { productMapper.toEntity(it) }
+        val savedEntities = productRepository.saveAll(productEntities)
+        return savedEntities.map { productMapper.toDomain(it) }
+    }
+
+    /**
      * 제품 목록 조회
      */
     override fun findAllByIds(productIds: List<Long>): List<Product> {
@@ -48,4 +57,13 @@ class ProductPersistenceAdapter(
         return productRepository.findAll()
             .map { productMapper.toDomain(it) }
     }
+
+    /**
+     * 제품 목록 조회 호출 시 락 적용 메서드 사용
+     */
+    override fun findAllByIdsForUpdate(productIds: List<Long>): List<Product> {
+        return productRepository.findAllByIdIn(productIds)
+            .map { productMapper.toDomain(it) }
+    }
+
 }

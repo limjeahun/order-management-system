@@ -12,9 +12,10 @@ class GetOrderListService(
     private val loadOrderPort: LoadOrderPort
 ) : GetOrderListQuery {
     /**
-     *
+     * 회원주문 목록 조회
      */
-    override fun getAllOrders(memberId: Long): Order {
-        TODO("Not yet implemented")
+    override fun getAllOrders(memberId: Long): List<Order> {
+        return loadOrderPort.findAllByMemberId(memberId)
+
     }
 }

@@ -7,4 +7,5 @@ import event.oms.domain.model.product.Product
  */
 interface SaveProductPort {
     fun save(product: Product): Product
+    fun saveAll(products: List<Product>): List<Product>
 }

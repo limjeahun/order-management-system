@@ -9,4 +9,5 @@ interface LoadProductPort {
     fun findAllByIds(productIds: List<Long>): List<Product>
     fun findById(productId: Long): Product?
     fun findAll(): List<Product>
+    fun findAllByIdsForUpdate(productIds: List<Long>): List<Product>
 }
