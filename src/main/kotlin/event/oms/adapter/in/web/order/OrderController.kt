@@ -38,9 +38,9 @@ class OrderController(
     @GetMapping("/{orderId}")
     override fun getOrderDetails(@PathVariable orderId: Long): ResponseEntity<BaseResponse<OrderResponse>> {
         // 1. Inbound Port(Query) 호출
-        val (order, productNames) = getOrderQuery.getOrder(orderId)
+        val orderResult = getOrderQuery.getOrder(orderId)
         // 2. Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
-        val response = OrderResponse.from(order, productNames)
+        val response = OrderResponse.from(orderResult.order, orderResult.productNames)
         return BaseResponse.ok(response).toResponseEntity()
     }
 

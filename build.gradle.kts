@@ -22,6 +22,12 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
+    }
+}
+
 dependencies {
     // 웹, JPA, Redis 관련 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -32,6 +38,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     // Swagger (Springdoc OpenAPI) 의존성 추가
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+    // Feign Client 의존성 추가
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

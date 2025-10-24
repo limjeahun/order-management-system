@@ -15,7 +15,7 @@ class GetOrderListService(
     private val loadProductPort: LoadProductPort,
 ) : GetOrderListQuery {
     /**
-     * 회원주문 목록 조회
+     * 회원 주문 목록 조회
      */
     override fun getAllOrdersByMember(memberId: Long): List<Pair<Order, Map<Long, String>>> {
         // 회원의 모든 주문 조회

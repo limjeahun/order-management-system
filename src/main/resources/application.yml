@@ -30,6 +30,18 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         use_sql_comments: true
+# ===============================================
+# Feign Client Configuration
+# ===============================================
+# Feign 클라이언트 인터페이스가 위치한 패키지 경로 (선택적이지만 명시하면 좋음)
+# feign.client.config.default.loggerLevel: full # 요청/응답 로그 상세 보기 (디버깅 시 유용)
+
+# --- 외부 서비스 URL ---
+external-api:
+  payment:
+    url: http://localhost:3001 # Mockoon 결제 API Mock 서버 주소
+  shipping:
+    url: http://localhost:3002 # Mockoon 배송 API Mock 서버 주소
 
 # ===============================================
 # LOGGING CONFIGURATION

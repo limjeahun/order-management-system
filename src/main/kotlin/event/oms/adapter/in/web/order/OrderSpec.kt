@@ -14,13 +14,13 @@ interface OrderSpec {
     @Operation(summary = "신규 주문 등록", description = "새로운 주문 정보를 시스템에 등록합니다.")
     fun newOrder(request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>>
 
-    @Operation(summary = "주문상세 정보 조회", description = "시스템에 등록된 주문상세 정보를 조회합니다.")
+    @Operation(summary = "주문 상세 정보 조회", description = "시스템에 등록된 주문상세 정보를 조회합니다.")
     fun getOrderDetails(
         @Parameter(description = "조회할 주문 ID")
         orderId: Long
     ): ResponseEntity<BaseResponse<OrderResponse>>
 
-    @Operation(summary = "회원 주문목록 정보 조회", description = "시스템에 등록된 주문목록 정보를 조회합니다.")
+    @Operation(summary = "회원 주문 목록 정보 조회", description = "시스템에 등록된 주문목록 정보를 조회합니다.")
     fun getAllOrdersByMember(
         @Parameter(description = "조회할 회원 ID")
         memberId: Long

@@ -1,6 +1,7 @@
 package event.oms.application.service.order
 
 import event.oms.application.port.`in`.order.GetOrderQuery
+import event.oms.application.port.`in`.order.GetOrderResult
 import event.oms.application.port.out.order.LoadOrderPort
 import event.oms.application.port.out.product.LoadProductPort
 import event.oms.domain.model.order.Order
@@ -16,7 +17,7 @@ class GetOrderService(
     /**
      * 주문 상세 정보 조회
      */
-    override fun getOrder(orderId: Long): Pair<Order, Map<Long, String>> {
+    override fun getOrder(orderId: Long): GetOrderResult {
         // 1. 주문 상세 정보 조회
         val order = loadOrderPort.findOrderById(orderId)
             ?: throw NoSuchElementException("ID가 ${orderId}인 주문을 찾을 수 없습니다.")
@@ -28,7 +29,6 @@ class GetOrderService(
         } else {
             emptyMap()
         }
-        // 3. Order 객체와 상품명 Map을 Pair로 묶어 반환
-        return Pair(order, productNamesMap)
+        return GetOrderResult.from(order, productNamesMap)
     }
 }
