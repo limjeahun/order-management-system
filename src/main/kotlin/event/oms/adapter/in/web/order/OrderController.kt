@@ -38,16 +38,19 @@ class OrderController(
     @GetMapping("/{orderId}")
     override fun getOrderDetails(@PathVariable orderId: Long): ResponseEntity<BaseResponse<OrderResponse>> {
         // 1. Inbound Port(Query) 호출
-        val order = getOrderQuery.getOrder(orderId)
+        val (order, productNames) = getOrderQuery.getOrder(orderId)
         // 2. Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
-        val response = OrderResponse.from(order)
+        val response = OrderResponse.from(order, productNames)
         return BaseResponse.ok(response).toResponseEntity()
     }
 
     @GetMapping
     override fun getAllOrdersByMember(@RequestParam memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
-        val orders = getOrderListQuery.getAllOrdersByMember(memberId)
-        val responses = orders.map { OrderResponse.from(it) }
+        // 1. Inbound Port(ListQuery) 호출
+        val orderPairs = getOrderListQuery.getAllOrdersByMember(memberId)
+        val responses = orderPairs.map { (order, productNames) ->
+            OrderResponse.from(order, productNames)
+        }
         return BaseResponse.ok(responses).toResponseEntity()
     }
 

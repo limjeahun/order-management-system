@@ -21,7 +21,26 @@ data class OrderResponse(
                 status     = order.status,
                 orderDate  = order.orderDate,
                 totalPrice = order.orderItems.sumOf { it.price.multiply(BigDecimal.valueOf(it.quantity.toLong()))},
-                items      = order.orderItems.map { OrderItemResponse(it.productId, it.price, it.quantity) }
+                items      = order.orderItems.map { OrderItemResponse(it.productId,"", it.price, it.quantity) }
+            )
+        }
+
+        fun from(order: Order, productNames: Map<Long, String>): OrderResponse {
+            return OrderResponse(
+                orderId    = order.id!!,
+                memberId   = order.memberId,
+                status     = order.status,
+                orderDate  = order.orderDate,
+                totalPrice = order.orderItems.sumOf { it.price.multiply(BigDecimal.valueOf(it.quantity.toLong()))},
+                items      = order.orderItems.map { item ->
+                    val productName = productNames[item.productId] ?: "상품명 없음"
+                    OrderItemResponse(
+                        item.productId,
+                        productName,
+                        item.price,
+                        item.quantity
+                    )
+                }
             )
         }
 
