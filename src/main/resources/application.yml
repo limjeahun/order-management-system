@@ -39,9 +39,13 @@ spring:
 # --- 외부 서비스 URL ---
 external-api:
   payment:
-    url: http://localhost:3001 # Mockoon 결제 API Mock 서버 주소
+    toss: http://localhost:3001 # Mockoon 결제 API Mock 서버 주소
   shipping:
     url: http://localhost:3002 # Mockoon 배송 API Mock 서버 주소
+
+toss:
+  payments:
+    secret-key: test_sk_449743785043904390
 
 # ===============================================
 # LOGGING CONFIGURATION

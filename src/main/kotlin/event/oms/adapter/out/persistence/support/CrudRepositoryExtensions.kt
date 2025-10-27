@@ -30,7 +30,7 @@ inline fun <T : Any, ID : Any> CrudRepository<T, ID>.getOrThrow(
  * @param id 조회할 ID
  * @param mapper 엔티티를 도메인 객체로 변환하는 함수
  */
-inline fun <T : Any, ID : Any, R : Any> CrudRepository<T, ID>.findByIdAndMap(
+inline fun <T : Any, ID : Any, R : Any> CrudRepository<T, ID>.findThenMap(
     id: ID,
     crossinline mapper: (T) -> R // "변환 로직"을 람다로 받음
 ): R? {

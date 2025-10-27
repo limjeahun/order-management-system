@@ -11,4 +11,11 @@ class Order(
     val receiverInfo: ReceiverInfo,
 ) {
 
+    fun confirmation() {
+        if (this.status != OrderStatus.PENDING) {
+            throw IllegalStateException("결제를 진행할 수 없는 주문 상태입니다: ${this.status}")
+        }
+    }
+
+
 }

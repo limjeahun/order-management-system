@@ -3,7 +3,7 @@ package event.oms.adapter.out.persistence.product
 import event.oms.adapter.out.persistence.product.mapper.toDomain
 import event.oms.adapter.out.persistence.product.mapper.toEntity
 import event.oms.adapter.out.persistence.product.repository.ProductJpaRepository
-import event.oms.adapter.out.persistence.support.findByIdAndMap
+import event.oms.adapter.out.persistence.support.findThenMap
 import event.oms.application.port.out.product.LoadProductPort
 import event.oms.application.port.out.product.SaveProductPort
 import event.oms.domain.model.product.Product
@@ -46,7 +46,7 @@ class ProductPersistenceAdapter(
      * 제품 상세 조회
      */
     override fun findById(productId: Long): Product? {
-        return productRepository.findByIdAndMap(productId) {
+        return productRepository.findThenMap(productId) {
             it.toDomain() // 조회 성공 시 도메인 객체로 변환
         }
     }
