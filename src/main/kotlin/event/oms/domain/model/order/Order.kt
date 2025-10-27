@@ -10,4 +10,5 @@ class Order(
     val orderDate   : LocalDateTime,
     val receiverInfo: ReceiverInfo,
 ) {
+
 }

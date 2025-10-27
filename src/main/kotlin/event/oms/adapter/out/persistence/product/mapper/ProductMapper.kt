@@ -2,25 +2,29 @@ package event.oms.adapter.out.persistence.product.mapper
 
 import event.oms.adapter.out.persistence.product.entity.ProductEntity
 import event.oms.domain.model.product.Product
-import org.springframework.stereotype.Component
 
-@Component
-class ProductMapper {
-    fun toEntity(product: Product): ProductEntity {
-        return ProductEntity(
-            id = product.id,
-            name = product.name,
-            price = product.price,
-            stock = product.stock,
-        )
-    }
+/**
+ * 도메인 Product 객체를 JPA ProductEntity 객체 변환
+ * @return ProductEntity 객체
+ */
+fun Product.toEntity(): ProductEntity {
+    return ProductEntity(
+        id    = id,
+        name  = name,
+        price = price,
+        stock = stock,
+    )
+}
 
-    fun toDomain(productEntity: ProductEntity): Product {
-        return Product(
-            id = productEntity.id,
-            name = productEntity.name,
-            price = productEntity.price,
-            stock = productEntity.stock,
-        )
-    }
+/**
+ * JPA ProductEntity 객체를 도메인 Product 객체로 변환
+ * @return Product 객체
+ */
+fun ProductEntity.toDomain(): Product {
+    return Product(
+        id    = id,
+        name  = name,
+        price = price,
+        stock = stock,
+    )
 }

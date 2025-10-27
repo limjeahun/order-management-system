@@ -40,6 +40,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
     // Feign Client 의존성 추가
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    // spring-data-commons 의존성 추가
+    implementation("org.springframework.data:spring-data-commons")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

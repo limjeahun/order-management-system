@@ -1,7 +1,9 @@
 package event.oms.adapter.out.persistence.product
 
-import event.oms.adapter.out.persistence.product.mapper.ProductMapper
+import event.oms.adapter.out.persistence.product.mapper.toDomain
+import event.oms.adapter.out.persistence.product.mapper.toEntity
 import event.oms.adapter.out.persistence.product.repository.ProductJpaRepository
+import event.oms.adapter.out.persistence.support.findByIdAndMap
 import event.oms.application.port.out.product.LoadProductPort
 import event.oms.application.port.out.product.SaveProductPort
 import event.oms.domain.model.product.Product
@@ -13,24 +15,23 @@ import org.springframework.stereotype.Component
 @Component
 class ProductPersistenceAdapter(
     private val productRepository: ProductJpaRepository,
-    private val productMapper    : ProductMapper,
 ) : SaveProductPort, LoadProductPort {
     /**
      * 제품 등록
      */
     override fun save(product: Product): Product {
-        val productEntity = productMapper.toEntity(product)
+        val productEntity = product.toEntity()
         val savedEntity   = productRepository.save(productEntity)
-        return productMapper.toDomain(savedEntity)
+        return savedEntity.toDomain()
     }
 
     /**
      * 여러 제품 정보를 등록
      */
     override fun saveAll(products: List<Product>): List<Product> {
-        val productEntities = products.map { productMapper.toEntity(it) }
-        val savedEntities = productRepository.saveAll(productEntities)
-        return savedEntities.map { productMapper.toDomain(it) }
+        val productEntities = products.map { it.toEntity() }
+        val savedEntities   = productRepository.saveAll(productEntities)
+        return savedEntities.map { it.toDomain() }
     }
 
     /**
@@ -38,16 +39,16 @@ class ProductPersistenceAdapter(
      */
     override fun findAllByIds(productIds: List<Long>): List<Product> {
         return productRepository.findAllById(productIds)
-            .map { productMapper.toDomain(it) }
+            .map { it.toDomain() }
     }
 
     /**
      * 제품 상세 조회
      */
     override fun findById(productId: Long): Product? {
-        return productRepository.findById(productId) // JpaRepository 기본 제공 메서드 사용
-            .map { productMapper.toDomain(it) } // 조회 성공 시 도메인 객체로 변환
-            .orElse(null)
+        return productRepository.findByIdAndMap(productId) {
+            it.toDomain() // 조회 성공 시 도메인 객체로 변환
+        }
     }
 
     /**
@@ -55,7 +56,7 @@ class ProductPersistenceAdapter(
      */
     override fun findAll(): List<Product> {
         return productRepository.findAll()
-            .map { productMapper.toDomain(it) }
+            .map { it.toDomain() }
     }
 
     /**
@@ -63,7 +64,7 @@ class ProductPersistenceAdapter(
      */
     override fun findAllByIdsForUpdate(productIds: List<Long>): List<Product> {
         return productRepository.findAllByIdIn(productIds)
-            .map { productMapper.toDomain(it) }
+            .map { it.toDomain() }
     }
 
 }
