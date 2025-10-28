@@ -1,18 +1,20 @@
 package event.oms.application.service.order
 
+import event.oms.adapter.out.persistence.support.runInNewTransaction
 import event.oms.application.port.`in`.order.OrderCommand
 import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.out.order.SaveOrderPort
 import event.oms.application.port.out.product.LoadProductPort
 import event.oms.application.port.out.product.SaveProductPort
+import event.oms.common.extensions.getLogger
 import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderStatus
 import event.oms.domain.model.order.ReceiverInfo
-import event.oms.domain.model.product.Product
 import event.oms.domain.service.order.OrderPriceCalculator
-import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.LocalDateTime
 
 
@@ -23,6 +25,7 @@ class OrderService(
     private val loadProductPort     : LoadProductPort,
     private val saveProductPort     : SaveProductPort,
     private val orderPriceCalculator: OrderPriceCalculator,
+    private val transactionTemplate : TransactionTemplate,
 ) : OrderUseCase {
     override fun order(command: OrderCommand): Order {
         // 1. 필요한 외부 데이터(상품) 조회
@@ -49,7 +52,7 @@ class OrderService(
             saveProductPort.saveAll(updatedProducts)
         }
 
-        // 4. 주문 생성
+        // 6. 주문 생성
         val newOrder = Order(
             memberId     = command.memberId,
             orderItems   = orderItems,
@@ -61,12 +64,14 @@ class OrderService(
                 address = command.receiverInfo.address
             )
         )
-        // 5. 주문 저장
-        return saveOrderPort.save(newOrder)
+        // 7. 주문 저장
+        return transactionTemplate.runInNewTransaction {
+            saveOrderPort.save(newOrder)
+        } ?: throw IllegalStateException("저장에 실패했습니다.")
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(OrderService::class.java)
+        private val log = getLogger()
     }
 
 }

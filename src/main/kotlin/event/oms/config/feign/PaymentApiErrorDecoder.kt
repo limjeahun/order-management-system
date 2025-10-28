@@ -3,14 +3,14 @@ package event.oms.config.feign
 import event.oms.adapter.out.external.payment.exception.PaymentApiClientException
 import event.oms.adapter.out.external.payment.exception.PaymentNotFoundException
 import event.oms.adapter.out.external.payment.exception.PaymentServerException
+import event.oms.common.extensions.getLogger
 import feign.Response
 import feign.codec.ErrorDecoder
-import org.slf4j.LoggerFactory
 import java.io.IOException
 
 class PaymentApiErrorDecoder: ErrorDecoder {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = getLogger()
     private val defaultDecoder = ErrorDecoder.Default()
 
     override fun decode(methodKey: String, response: Response): Exception {

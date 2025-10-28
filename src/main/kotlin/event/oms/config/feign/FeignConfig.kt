@@ -1,6 +1,7 @@
 package event.oms.config.feign
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import event.oms.common.extensions.getLogger
 import feign.Logger
 import feign.Response
 import feign.codec.ErrorDecoder
@@ -15,7 +16,7 @@ import java.io.IOException
 class FeignConfig(
     private val objectMapper: ObjectMapper,
 ) {
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = getLogger()
 
     /**
      * Feign 로깅 레벨 설정 (모든 클라이언트에 적용)
