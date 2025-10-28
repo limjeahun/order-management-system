@@ -36,7 +36,7 @@ class TossPaymentsAdapter(
         )
 
         try {
-            val response = tossPaymentsClient.requestPayment("", request) // Auth header ignored here
+            val response = tossPaymentsClient.requestPayment(request) // Auth header ignored here
             log.info("[Toss] Payment Request Success: orderId={}, paymentKey={}", orderId, response.paymentKey)
             return response
         } catch (e: Exception) {
@@ -57,7 +57,7 @@ class TossPaymentsAdapter(
         val request = TossPaymentApprovalRequest(paymentKey, orderId, amount)
 
         try {
-            val response = tossPaymentsClient.confirmPayment("", request)
+            val response = tossPaymentsClient.confirmPayment(request)
             log.info("[Toss] Payment Confirm Success: orderId={}, status={}", orderId, response.status)
             return response
         } catch (e: Exception) {

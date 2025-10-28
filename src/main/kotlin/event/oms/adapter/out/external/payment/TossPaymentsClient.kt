@@ -19,13 +19,11 @@ interface TossPaymentsClient {
 
     @PostMapping("/v1/payments")
     fun requestPayment(
-        @RequestHeader("Authorization") authorization: String, // Basic Auth Header
         @RequestBody request: TossPaymentRequest
     ): TossPaymentRequestResponse
 
     @PostMapping("/v1/payments/confirm")
     fun confirmPayment(
-        @RequestHeader("Authorization") authorization: String, // Basic Auth Header
         @RequestBody request: TossPaymentApprovalRequest
     ): TossPaymentApprovalResponse
 
