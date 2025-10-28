@@ -4,9 +4,11 @@ import event.oms.adapter.`in`.web.common.BaseResponse
 import event.oms.adapter.`in`.web.common.BaseResponse.Companion.toResponseEntity
 import event.oms.adapter.`in`.web.order.request.OrderRequest
 import event.oms.adapter.`in`.web.order.response.OrderResponse
+import event.oms.adapter.`in`.web.order.response.PaymentRequestResponse
 import event.oms.application.port.`in`.order.GetOrderListQuery
 import event.oms.application.port.`in`.order.GetOrderQuery
 import event.oms.application.port.`in`.order.OrderUseCase
+import event.oms.application.port.`in`.payment.RequestPaymentUseCase
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,9 +22,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/orders")
 class OrderController(
-    private val orderUseCase     : OrderUseCase,
-    private val getOrderQuery    : GetOrderQuery,
-    private val getOrderListQuery: GetOrderListQuery,
+    private val orderUseCase         : OrderUseCase,
+    private val getOrderQuery        : GetOrderQuery,
+    private val getOrderListQuery    : GetOrderListQuery,
+    private val requestPaymentUseCase: RequestPaymentUseCase,
     ): OrderSpec {
     @PostMapping
     override fun newOrder(@Valid @RequestBody request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>> {
@@ -53,5 +56,13 @@ class OrderController(
         }
         return BaseResponse.ok(responses).toResponseEntity()
     }
+
+    @PostMapping("/{orderId}/request-payment")
+    fun requestOrderPayment(@PathVariable orderId: Long): ResponseEntity<BaseResponse<PaymentRequestResponse>> {
+        val result = requestPaymentUseCase.requestPayment(orderId)
+        val responses = PaymentRequestResponse.from(result)
+        return BaseResponse.ok(responses).toResponseEntity()
+    }
+
 
 }

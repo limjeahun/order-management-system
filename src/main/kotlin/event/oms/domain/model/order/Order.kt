@@ -11,11 +11,14 @@ class Order(
     val receiverInfo: ReceiverInfo,
 ) {
 
-    fun confirmation() {
+    /**
+     * 결제 상태로 변경
+     */
+    fun markAsPaid() {
         if (this.status != OrderStatus.PENDING) {
             throw IllegalStateException("결제를 진행할 수 없는 주문 상태입니다: ${this.status}")
         }
+        this.status = OrderStatus.PAID
     }
-
 
 }
