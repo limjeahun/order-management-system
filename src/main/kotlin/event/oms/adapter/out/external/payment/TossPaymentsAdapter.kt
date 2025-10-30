@@ -5,7 +5,8 @@ import event.oms.adapter.out.external.payment.dto.request.TossPaymentRequest
 import event.oms.adapter.out.external.payment.dto.response.TossPaymentApprovalResponse
 import event.oms.adapter.out.external.payment.dto.response.TossPaymentRequestResponse
 import event.oms.adapter.out.external.payment.exception.PaymentApiClientException
-import event.oms.application.port.out.payment.TossPaymentPort
+import event.oms.application.port.out.payment.ConfirmTossPaymentPort
+import event.oms.application.port.out.payment.RequestTossPaymentPort
 import event.oms.common.extensions.getLogger
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
@@ -13,7 +14,7 @@ import java.math.BigDecimal
 @Component
 class TossPaymentsAdapter(
     private val tossPaymentsClient: TossPaymentsClient
-): TossPaymentPort {
+): RequestTossPaymentPort, ConfirmTossPaymentPort {
     private val log = getLogger()
 
     /**
@@ -24,7 +25,7 @@ class TossPaymentsAdapter(
         orderName : String,
         amount    : BigDecimal,
         successUrl: String,
-        failUrl   : String
+        failUrl   : String,
     ): TossPaymentRequestResponse {
         log.info("[Toss] Payment Request Start: orderId={}", orderId)
         val request = TossPaymentRequest(
@@ -51,7 +52,7 @@ class TossPaymentsAdapter(
     override fun confirmTossPayment(
         paymentKey: String,
         orderId   : String,
-        amount    : BigDecimal
+        amount    : BigDecimal,
     ): TossPaymentApprovalResponse {
         log.info("[Toss] Payment Confirm Start: orderId={}, paymentKey={}", orderId, paymentKey)
         val request = TossPaymentApprovalRequest(paymentKey, orderId, amount)

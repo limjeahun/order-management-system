@@ -1,10 +1,14 @@
 package event.oms.application.service.payment
 
+import event.oms.adapter.out.external.payment.exception.PaymentNotFoundException
+import event.oms.adapter.out.external.payment.exception.PaymentServerException
 import event.oms.application.port.`in`.payment.ConfirmPaymentCommand
 import event.oms.application.port.`in`.payment.ConfirmPaymentUseCase
 import event.oms.application.port.out.order.LoadOrderPort
 import event.oms.application.port.out.order.SaveOrderPort
-import event.oms.application.port.out.payment.PaymentPersistencePort
+import event.oms.application.port.out.payment.ConfirmTossPaymentPort
+import event.oms.application.port.out.payment.LoadPaymentPort
+import event.oms.application.port.out.payment.SavePaymentPort
 import event.oms.application.port.out.payment.TossPaymentPort
 import event.oms.common.extensions.getLogger
 import event.oms.domain.model.payment.PaymentStatus
@@ -15,10 +19,11 @@ import java.time.format.DateTimeFormatter
 
 @Service
 class ConfirmPaymentService(
-    private val loadOrderPort         : LoadOrderPort,
-    private val saveOrderPort         : SaveOrderPort,
-    private val tossPaymentPort       : TossPaymentPort,
-    private val paymentPersistencePort: PaymentPersistencePort,
+    private val loadOrderPort  : LoadOrderPort,
+    private val saveOrderPort  : SaveOrderPort,
+    private val confirmTossPaymentPort: ConfirmTossPaymentPort,
+    private val savePaymentPort: SavePaymentPort,
+    private val loadPaymentPort: LoadPaymentPort,
 ): ConfirmPaymentUseCase {
     private val log = getLogger()
 
@@ -27,32 +32,29 @@ class ConfirmPaymentService(
         log.info("결제 승인 처리 시작: orderId={}, paymentKey={}", command.orderId, command.paymentKey)
 
         // 1. 결제 정보 체크
-        val payment = paymentPersistencePort.findByPaymentKey(command.paymentKey)
-            ?: throw NoSuchElementException("결제 정보를 찾을 수 없음: ${command.paymentKey}")
+        val payment = loadPaymentPort.findByPaymentKey(command.paymentKey)
+            ?: throw PaymentNotFoundException("결제 정보를 찾을 수 없음: ${command.paymentKey}")
 
         if (payment.status != PaymentStatus.REQUESTED) {
             log.warn("이미 처리되었거나 잘못된 상태의 결제 승인 시도: paymentKey={}, status={}", command.paymentKey, payment.status)
-            // Decide how to handle this (e.g., ignore, throw specific exception)
-            return // Or throw IllegalStateException("이미 처리된 결제입니다.")
+            throw PaymentServerException("이미 처리된 결제입니다.")
         }
         // 결제 금액 체크
         if (payment.orderId.toString() != command.orderId || payment.amount.compareTo(command.amount) != 0) {
             log.error("결제 정보 불일치: DB vs Toss Callback. Key={}, DB OrderId={}, Callback OrderId={}, DB Amount={}, Callback Amount={}",
                 command.paymentKey, payment.orderId, command.orderId, payment.amount, command.amount)
-            // TODO: Handle mismatch - potentially mark payment as FAILED
             payment.status = PaymentStatus.FAILED
-            paymentPersistencePort.save(payment)
-            throw IllegalArgumentException("결제 정보가 일치하지 않습니다.")
+            savePaymentPort.save(payment)
         }
 
         // 2. Toss Approval API 요청
-        val approvalResponse = tossPaymentPort.confirmTossPayment(command.paymentKey, command.orderId, command.amount)
+        val approvalResponse = confirmTossPaymentPort.confirmTossPayment(command.paymentKey, command.orderId, command.amount)
         
         // 3. 실패 시
         if (approvalResponse.status != "DONE") {
             payment.status = PaymentStatus.FAILED
             payment.approvedAt = LocalDateTime.now()
-            paymentPersistencePort.save(payment)
+            savePaymentPort.save(payment)
             log.error("Toss 결제 승인 실패: paymentKey={}, status={}", command.paymentKey, approvalResponse.status)
         }
         
@@ -67,7 +69,7 @@ class ConfirmPaymentService(
                 log.warn("Toss approvedAt 날짜 파싱 실패: {}, setting current time.", approvalResponse.approvedAt, e)
                 payment.approvedAt = LocalDateTime.now() // Fallback
             }
-            paymentPersistencePort.save(payment)
+            savePaymentPort.save(payment)
             log.info("결제 상태 COMPLETED로 변경: paymentKey={}", command.paymentKey)
 
             // Update Order status

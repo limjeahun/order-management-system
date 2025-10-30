@@ -34,7 +34,7 @@ class OrderPersistenceAdapter(
     /**
      * 주문번호로 주문 조회
      */
-    override fun findOrderById(orderId: Long): Order? {
+    override fun findOrderById(orderId: Long): Order {
         val orderJpaEntity = orderRepository.getOrThrow(orderId)
         val orderItemJpaEntities = orderItemRepository.findByOrderId(orderId)
         // 조회된 엔티티들을 도메인 모델로 변환하여 반환
@@ -45,11 +45,18 @@ class OrderPersistenceAdapter(
      * 회원주문 목록 조회
      */
     override fun findAllByMemberId(memberId: Long): List<Order> {
+        // 회원주문 목록 조회
         val orderJpaEntities = orderRepository.findAllByMemberId(memberId)
+        // 추출된 ID 리스트를 사용해 모든 관련 주문 상품 조회
+        val orderItemsMap = orderItemRepository.findByOrderIdIn(
+            // 주문 ID 추출
+            orderJpaEntities.map {
+                it.id?: throw NoSuchElementException("주문번호를 찾을 수 없습니다.")
+            }
+        ).groupBy { it.orderId } // orderId를 기준으로 그룹화
+        // 아이템 리스트 셋팅
         return orderJpaEntities.map { order ->
-            val orderId = order.id?: throw NoSuchElementException("주문번호를 찾을 수 없습니다.")
-            val orderItemJpaEntities = orderItemRepository.findByOrderId(orderId)
-            order.toDomain(orderItemJpaEntities)
+            order.toDomain(orderItemsMap[order.id]?: emptyList())
         }
     }
 

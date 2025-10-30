@@ -11,7 +11,6 @@ import event.oms.domain.model.order.Order
 import event.oms.domain.model.order.OrderStatus
 import event.oms.domain.model.order.ReceiverInfo
 import event.oms.domain.service.order.OrderPriceCalculator
-import org.slf4j.Logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate

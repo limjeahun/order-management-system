@@ -3,8 +3,8 @@ package event.oms.application.service.payment
 import event.oms.application.port.`in`.payment.PaymentRequestResult
 import event.oms.application.port.`in`.payment.RequestPaymentUseCase
 import event.oms.application.port.out.order.LoadOrderPort
-import event.oms.application.port.out.payment.PaymentPersistencePort
-import event.oms.application.port.out.payment.TossPaymentPort
+import event.oms.application.port.out.payment.RequestTossPaymentPort
+import event.oms.application.port.out.payment.SavePaymentPort
 import event.oms.common.extensions.getLogger
 import event.oms.domain.model.order.OrderStatus
 import event.oms.domain.model.payment.Payment
@@ -17,9 +17,9 @@ import java.time.LocalDateTime
 
 @Service
 class RequestPaymentService(
-    private val loadOrderPort         : LoadOrderPort,
-    private val tossPaymentPort       : TossPaymentPort,
-    private val paymentPersistencePort: PaymentPersistencePort,
+    private val loadOrderPort  : LoadOrderPort,
+    private val requestTossPaymentPort: RequestTossPaymentPort,
+    private val savePaymentPort: SavePaymentPort,
     @Value("\${server.port}") private val serverPort: Int,
     @Value("\${server.servlet.context-path:/}") private val contextPath: String,
 ): RequestPaymentUseCase {
@@ -29,8 +29,7 @@ class RequestPaymentService(
     override fun requestPayment(orderId: Long): PaymentRequestResult {
         log.info("결제 요청 시작 (Service): orderId={}", orderId)
         val order = loadOrderPort.findOrderById(orderId)
-            ?: throw NoSuchElementException("결제 요청할 주문 없음: $orderId")
-
+        // 주문 상태 체크
         if (order.status != OrderStatus.PENDING) {
             throw IllegalStateException("이미 처리되었거나 결제할 수 없는 주문입니다.")
         }
@@ -45,7 +44,7 @@ class RequestPaymentService(
         val failUrl = "$baseUrl/api/v1/payments/toss/fail"
 
         // Toss Request API
-        val tossResponse = tossPaymentPort.requestTossPayment(orderId, orderName, amount, successUrl, failUrl)
+        val tossResponse = requestTossPaymentPort.requestTossPayment(orderId, orderName, amount, successUrl, failUrl)
 
         // Payment 저장
         val payment = Payment(
@@ -57,7 +56,7 @@ class RequestPaymentService(
             approvedAt  = LocalDateTime.now(),
         )
 
-        paymentPersistencePort.save(payment)
+        savePaymentPort.save(payment)
         log.info("결제 정보 저장 (REQUESTED): orderId={}, paymentKey={}", orderId, tossResponse.paymentKey)
 
         // Return result to Controller -> Frontend

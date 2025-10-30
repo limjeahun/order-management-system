@@ -20,7 +20,6 @@ class GetOrderService(
     override fun getOrder(orderId: Long): GetOrderResult {
         // 1. 주문 상세 정보 조회
         val order = loadOrderPort.findOrderById(orderId)
-            ?: throw NoSuchElementException("ID가 ${orderId}인 주문을 찾을 수 없습니다.")
         // 2. 관련 상품 정보 조회
         val productIds = order.orderItems.map { it.productId }
         val productNamesMap = if (productIds.isNotEmpty()) {
