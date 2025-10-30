@@ -4,7 +4,6 @@ import event.oms.adapter.out.external.payment.dto.request.TossPaymentApprovalReq
 import event.oms.adapter.out.external.payment.dto.request.TossPaymentRequest
 import event.oms.adapter.out.external.payment.dto.response.TossPaymentApprovalResponse
 import event.oms.adapter.out.external.payment.dto.response.TossPaymentRequestResponse
-import event.oms.adapter.out.external.payment.exception.PaymentApiClientException
 import event.oms.application.port.out.payment.ConfirmTossPaymentPort
 import event.oms.application.port.out.payment.RequestTossPaymentPort
 import event.oms.common.extensions.getLogger
@@ -36,14 +35,9 @@ class TossPaymentsAdapter(
             failUrl    = failUrl,
         )
 
-        try {
-            val response = tossPaymentsClient.requestPayment(request) // Auth header ignored here
-            log.info("[Toss] Payment Request Success: orderId={}, paymentKey={}", orderId, response.paymentKey)
-            return response
-        } catch (e: Exception) {
-            log.error("[Toss] Payment Request Failed: orderId={}", orderId, e)
-            throw PaymentApiClientException("Toss 결제 요청 실패")
-        }
+        val response = tossPaymentsClient.requestPayment(request) // Auth header ignored here
+        log.info("[Toss] Payment Request Success: orderId={}, paymentKey={}", orderId, response.paymentKey)
+        return response
     }
 
     /**
@@ -57,14 +51,9 @@ class TossPaymentsAdapter(
         log.info("[Toss] Payment Confirm Start: orderId={}, paymentKey={}", orderId, paymentKey)
         val request = TossPaymentApprovalRequest(paymentKey, orderId, amount)
 
-        try {
-            val response = tossPaymentsClient.confirmPayment(request)
-            log.info("[Toss] Payment Confirm Success: orderId={}, status={}", orderId, response.status)
-            return response
-        } catch (e: Exception) {
-            log.error("[Toss] Payment Confirm Failed: orderId={}, paymentKey={}", orderId, paymentKey, e)
-            throw PaymentApiClientException("Toss 결제 승인 실패")
-        }
+        val response = tossPaymentsClient.confirmPayment(request)
+        log.info("[Toss] Payment Confirm Success: orderId={}, status={}", orderId, response.status)
+        return response
     }
 
 

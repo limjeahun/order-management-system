@@ -9,7 +9,6 @@ import event.oms.application.port.out.order.SaveOrderPort
 import event.oms.application.port.out.payment.ConfirmTossPaymentPort
 import event.oms.application.port.out.payment.LoadPaymentPort
 import event.oms.application.port.out.payment.SavePaymentPort
-import event.oms.application.port.out.payment.TossPaymentPort
 import event.oms.common.extensions.getLogger
 import event.oms.domain.model.payment.PaymentStatus
 import org.springframework.stereotype.Service

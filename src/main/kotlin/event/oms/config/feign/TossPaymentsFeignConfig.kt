@@ -3,6 +3,7 @@ package event.oms.config.feign
 import feign.Logger
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import feign.codec.ErrorDecoder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import java.util.Base64
@@ -24,6 +25,11 @@ class TossPaymentsFeignConfig {
     @Bean
     fun feignLoggerLevel(): Logger.Level {
         return Logger.Level.FULL
+    }
+
+    @Bean
+    fun paymentErrorDecoder(): ErrorDecoder {
+        return PaymentApiErrorDecoder()
     }
 
 
