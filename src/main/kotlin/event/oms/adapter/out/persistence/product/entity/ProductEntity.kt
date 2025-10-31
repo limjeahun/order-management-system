@@ -17,4 +17,5 @@ class ProductEntity(
     var price: BigDecimal,
     val stock: Int,
 ) {
+
 }
