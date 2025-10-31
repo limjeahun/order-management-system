@@ -13,7 +13,6 @@ import event.oms.domain.model.order.ReceiverInfo
  */
 fun Order.toOrderEntity(): OrderEntity {
     return OrderEntity(
-        id           = id,
         memberId     = memberId,
         status       = status,
         orderDate    = orderDate,

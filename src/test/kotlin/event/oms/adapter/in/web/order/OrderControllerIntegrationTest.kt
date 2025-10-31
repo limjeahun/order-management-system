@@ -28,7 +28,7 @@ import java.math.BigDecimal
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 internal class OrderControllerIntegrationTest @Autowired constructor(
     private val mockMvc            : MockMvc,
@@ -41,19 +41,19 @@ internal class OrderControllerIntegrationTest @Autowired constructor(
     @DisplayName("주문 생성 API 호출 시: DB에 주문 및 주문 항목 정보가 정상적으로 저장된다")
     fun `newOrder - should save order and order items to database when API is called`() {
         // given
-        val memberId = 1L
+        val memberId = 2L
         // 컨트롤러에 전달할 요청 DTO
         val request = OrderRequest(
             memberId = memberId,
             items = listOf(
                 OrderItemRequest(productId = 5312040000L, quantity = 1),
-                OrderItemRequest(productId = 5312040001L, quantity = 1),
+                OrderItemRequest(productId = 5312040001L, quantity = 2),
                 OrderItemRequest(productId = 5312040002L, quantity = 1),
-                OrderItemRequest(productId = 5312040003L, quantity = 1),
+                OrderItemRequest(productId = 5312040003L, quantity = 2),
                 OrderItemRequest(productId = 5312040004L, quantity = 1),
             ),
             receiverInfo = ReceiverInfoRequest(
-                name = "곽철이",
+                name = "용순이",
                 phone = "010-0000-0000",
                 address = "서울시 강남구"
             )

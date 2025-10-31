@@ -1,6 +1,11 @@
 # ===============================================
 # SPRING BOOT APPLICATION CONFIGURATION
 # ===============================================
+server:
+  port: 8080
+# ===============================================
+# SPRING BOOT APPLICATION CONFIGURATION
+# ===============================================
 spring:
   application:
     name: oms #
@@ -39,9 +44,9 @@ spring:
 # --- 외부 서비스 URL ---
 external-api:
   payment:
-    toss: http://localhost:3001 # Mockoon 결제 API Mock 서버 주소
+    toss: http://localhost:3000 # Mockoon 결제 API Mock 서버 주소
   shipping:
-    url: http://localhost:3002 # Mockoon 배송 API Mock 서버 주소
+    url: http://localhost:3000 # Mockoon 배송 API Mock 서버 주소
 
 toss:
   payments:

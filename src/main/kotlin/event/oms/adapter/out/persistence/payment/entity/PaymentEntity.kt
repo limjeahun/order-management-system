@@ -1,5 +1,6 @@
 package event.oms.adapter.out.persistence.payment.entity
 
+import event.oms.adapter.out.persistence.support.AbstractJpaEntity
 import event.oms.domain.model.payment.PaymentStatus
 import jakarta.persistence.*
 import java.math.BigDecimal
@@ -8,9 +9,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "payment")
 class PaymentEntity(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id          : Long? = null,
-
     @Column(nullable = false, unique = true)
     val orderId: Long,
 
@@ -28,6 +26,6 @@ class PaymentEntity(
     val requestedAt: LocalDateTime,
 
     var approvedAt: LocalDateTime,
-) {
+): AbstractJpaEntity() {
 
 }

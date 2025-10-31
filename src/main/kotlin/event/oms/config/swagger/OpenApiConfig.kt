@@ -37,4 +37,13 @@ class OpenApiConfig {
             .build()
     }
 
+    @Bean
+    fun paymentsGroupOpenAPI(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("payments")
+            .pathsToMatch("/api/v1/payments/**")
+            .build()
+    }
+
+
 }

@@ -30,15 +30,17 @@ CREATE TABLE product (
 
 -- payment 테이블
 CREATE TABLE payment (
-     id BIGINT NOT NULL AUTO_INCREMENT,
-     order_id BIGINT NOT NULL UNIQUE,          -- 해당 주문 ID (1:1 관계)
-     payment_key VARCHAR(255) NOT NULL UNIQUE, -- 외부 결제 시스템에서 받은 고유 키
-     amount DECIMAL(19, 2) NOT NULL,           -- 결제 금액
-     status VARCHAR(50) NOT NULL,              -- 결제 상태 (예: COMPLETED, FAILED)
-     paid_at DATETIME(6),                       -- 결제 완료 일시
-     PRIMARY KEY (id),
-     INDEX idx_payment_order_id (order_id)     -- 주문 ID 인덱스
-) engine=InnoDB;
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    order_id BIGINT NOT NULL,
+    payment_key VARCHAR(255) NOT NULL,
+    amount DECIMAL(19, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    requested_at DATETIME(6) NOT NULL,
+    approved_at DATETIME(6) NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_payment_order_id (order_id),
+    UNIQUE KEY uk_payment_payment_key (payment_key)
+) ENGINE=InnoDB;
 
 -- shipping 테이블
 CREATE TABLE shipping (

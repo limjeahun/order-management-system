@@ -58,7 +58,7 @@ class OrderController(
     }
 
     @PostMapping("/{orderId}/request-payment")
-    fun requestOrderPayment(@PathVariable orderId: Long): ResponseEntity<BaseResponse<PaymentRequestResponse>> {
+    override fun requestOrderPayment(@PathVariable orderId: Long): ResponseEntity<BaseResponse<PaymentRequestResponse>> {
         val result = requestPaymentUseCase.requestPayment(orderId)
         val responses = PaymentRequestResponse.from(result)
         return BaseResponse.ok(responses).toResponseEntity()

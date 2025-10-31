@@ -42,6 +42,20 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // spring-data-commons 의존성 추가
     implementation("org.springframework.data:spring-data-commons")
+
+    // --- Spring Security ---
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.security:spring-security-test")
+
+    // --- JWT (Java JWT: jjwt) ---
+    val jwtVersion = "0.12.5" // 최신 버전 사용
+    implementation("io.jsonwebtoken:jjwt-api:${jwtVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${jwtVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jwtVersion}") // JSON 파싱용
+
+    // OAuth2 리소스 서버 JWT 지원
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
