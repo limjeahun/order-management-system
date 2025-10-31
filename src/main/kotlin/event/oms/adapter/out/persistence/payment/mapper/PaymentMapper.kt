@@ -8,7 +8,6 @@ import event.oms.domain.model.payment.Payment
  */
 fun Payment.toEntity(): PaymentEntity {
     return PaymentEntity(
-        id          = id,
         orderId     = orderId,
         paymentKey  = paymentKey,
         amount      = amount,

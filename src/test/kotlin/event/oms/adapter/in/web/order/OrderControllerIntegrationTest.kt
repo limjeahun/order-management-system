@@ -28,7 +28,7 @@ import java.math.BigDecimal
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 internal class OrderControllerIntegrationTest @Autowired constructor(
     private val mockMvc            : MockMvc,
