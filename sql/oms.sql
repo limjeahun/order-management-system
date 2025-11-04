@@ -56,3 +56,14 @@ CREATE TABLE shipping (
     PRIMARY KEY (id),
     INDEX idx_shipping_order_id (order_id)    -- 주문 ID 인덱스
 ) engine=InnoDB;
+
+-- member 테이블
+CREATE TABLE member (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
+    password VARCHAR(255) NOT NULL,        -- 해시된 비밀번호
+    role VARCHAR(50) NOT NULL,             -- 권한 (예: ROLE_USER)
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    INDEX idx_member_username (username)
+) ENGINE=InnoDB;

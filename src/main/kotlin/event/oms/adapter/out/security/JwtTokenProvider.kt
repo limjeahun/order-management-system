@@ -38,7 +38,6 @@ class JwtTokenProvider(
     override fun generateTokens(authentication: Authentication): TokenInfo {
         val accessToken = createAccessToken(authentication)
         val refreshToken = createRefreshToken(authentication)
-
         return TokenInfo(
             grantType = "Bearer",
             accessToken = accessToken,
@@ -46,15 +45,12 @@ class JwtTokenProvider(
         )
     }
 
-    // 1. Access Token 생성 (짧은 만료 시간, 권한 정보 포함)
+    /**
+     * 1. Access Token 생성 (짧은 만료 시간, 권한 정보 포함)
+     */
     private fun createAccessToken(authentication: Authentication): String {
-        val authorities: String = authentication.authorities
-            .map { it.authority }
-            .joinToString(",")
-
-        val principal = authentication.principal as? CustomUserDetails
-            ?: throw IllegalStateException("Authentication principal is not CustomUserDetails")
-
+        val authorities: String = authentication.authorities.map { it.authority }.joinToString(",")
+        val principal = authentication.principal as CustomUserDetails
         val now = Date()
         val expirationDate = Date(now.time + accessExpirationMs)
 
@@ -68,64 +64,58 @@ class JwtTokenProvider(
             .compact()
     }
 
-    // 2. Refresh Token 생성 (긴 만료 시간, 최소 정보)
+    /**
+     * 2. Refresh Token 생성 (긴 만료 시간, 최소 정보)
+     */
     private fun createRefreshToken(authentication: Authentication): String {
         val now = Date()
         val expirationDate = Date(now.time + refreshExpirationMs)
-
         return Jwts.builder()
-            .subject(authentication.name) // username
+            .subject(authentication.name)
             .issuedAt(now)
             .expiration(expirationDate)
             .signWith(key)
             .compact()
     }
 
-    /**
-     * 토큰에서 인증 정보(Authentication) 추출 (Filter에서 사용)
-     */
+    // (Access Token 검증용)
+    fun validateToken(token: String): Boolean {
+        try {
+            parseClaims(token)
+            return true
+        } catch (e: Exception) {
+            // (로그) MalformedJwtException, ExpiredJwtException 등
+            return false
+        }
+    }
+
+    // (Access Token 파싱용)
+    fun parseClaims(accessToken: String): Claims {
+        return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(accessToken)
+            .payload
+    }
+
+    // (Access Token 인증 객체 생성용)
     fun getAuthentication(accessToken: String): Authentication {
         val claims: Claims = parseClaims(accessToken)
-
         val authorities: Collection<GrantedAuthority> =
             (claims[AUTHORITIES_KEY]?.toString() ?: "")
                 .split(",")
                 .filter { it.isNotEmpty() }
                 .map { SimpleGrantedAuthority(it) }
 
-        // 클레임에서 회원 ID 추출
         val memberId = claims["memberId"]?.toString()?.toLong()
             ?: throw RuntimeException("Token does not contain memberId")
 
-        // UserDetails 구현체 (CustomUserDetails) 생성
         val principal = CustomUserDetails(
-            id          = memberId,
-            username    = claims.subject,
+            id = memberId,
+            username = claims.subject,
             authorities = authorities
         )
-
         return UsernamePasswordAuthenticationToken(principal, "", authorities)
-    }
-
-    /**
-     * 토큰 유효성 검증 (Filter에서 사용)
-     */
-    fun validateToken(token: String): Boolean {
-        try {
-            parseClaims(token)
-            return true
-        } catch (e: Exception) {
-            // (로그) e.g., MalformedJwtException, ExpiredJwtException, etc.
-            return false
-        }
-    }
-
-    private fun parseClaims(accessToken: String): Claims {
-        return Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(accessToken)
-            .payload
     }
 
 

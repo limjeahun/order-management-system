@@ -11,25 +11,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 @Configuration
 @EnableCaching
 class RedisConfig {
-
     /**
-     * 캐시 (Member 객체 등)를 위한 RedisTemplate
-     * Key: String, Value: JSON (Generic)
+     * Member 객체 캐시용 (Key: String, Value: JSON)
      */
     @Bean
     fun cacheRedisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, Any> {
         val template = RedisTemplate<String, Any>()
         template.connectionFactory = connectionFactory
         template.keySerializer = StringRedisSerializer()
-        template.valueSerializer = GenericJackson2JsonRedisSerializer() // 객체를 JSON으로 직렬화
-        template.hashKeySerializer = StringRedisSerializer()
-        template.hashValueSerializer = GenericJackson2JsonRedisSerializer()
+        template.valueSerializer = GenericJackson2JsonRedisSerializer()
         return template
     }
 
     /**
-     * JWT 토큰 관리를 위한 RedisTemplate
-     * Key: String (Token), Value: String (Username)
+     * RT 저장용 (Key: String, Value: String)
      */
     @Bean(name = ["tokenRedisTemplate"])
     fun tokenRedisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, String> {

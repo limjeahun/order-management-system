@@ -9,8 +9,10 @@ import event.oms.application.port.`in`.order.GetOrderListQuery
 import event.oms.application.port.`in`.order.GetOrderQuery
 import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.`in`.payment.RequestPaymentUseCase
+import event.oms.config.security.CustomUserDetails
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,9 +30,16 @@ class OrderController(
     private val requestPaymentUseCase: RequestPaymentUseCase,
     ): OrderSpec {
     @PostMapping
-    override fun newOrder(@Valid @RequestBody request: OrderRequest): ResponseEntity<BaseResponse<OrderResponse>> {
+    override fun newOrder(
+        @Valid @RequestBody request: OrderRequest,
+        authentication: Authentication, // 인증 정보 주입
+
+    ): ResponseEntity<BaseResponse<OrderResponse>> {
+        // 인증된 사용자의 ID (memberId) 추출
+        val userDetails = authentication.principal as? CustomUserDetails
+            ?: throw IllegalStateException("SecurityContext에 CustomUserDetails가 없습니다.")
         // 1. Application 계층의 Command 객체로 변환
-        val command = request.toCommand()
+        val command = request.toCommand(userDetails.id)
         // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
         val createdOrder = orderUseCase.order(command)
         // 3. Domain 모델을 응답 DTO로 변환

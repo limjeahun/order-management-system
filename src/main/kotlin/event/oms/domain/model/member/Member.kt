@@ -1,5 +1,6 @@
 package event.oms.domain.model.member
 
+import java.io.Serializable
 import java.time.LocalDateTime
 
 /**
@@ -12,6 +13,6 @@ class Member(
     val passwordHash: String,
     val role        : Role,
     val createdAt   : LocalDateTime? = null
-) {
+): Serializable { // 캐시 직렬화를 위해 Serializable 구현
     fun hasId(): Boolean = id != null
 }

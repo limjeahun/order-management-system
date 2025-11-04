@@ -6,5 +6,5 @@ interface RefreshTokenUseCase {
      * @param refreshToken 유효한 Refresh Token
      * @return 새로운 TokenInfo (Access + Refresh)
      */
-    fun refreshTokens(refreshToken: String): TokenInfo
+    fun refreshTokens(command: RefreshCommand): TokenInfo
 }

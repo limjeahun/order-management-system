@@ -44,7 +44,7 @@ internal class OrderControllerIntegrationTest @Autowired constructor(
         val memberId = 2L
         // 컨트롤러에 전달할 요청 DTO
         val request = OrderRequest(
-            memberId = memberId,
+            //memberId = memberId,
             items = listOf(
                 OrderItemRequest(productId = 5312040000L, quantity = 1),
                 OrderItemRequest(productId = 5312040001L, quantity = 2),
