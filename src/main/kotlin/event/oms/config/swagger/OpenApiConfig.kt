@@ -3,6 +3,8 @@ package event.oms.config.swagger
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springdoc.core.models.GroupedOpenApi
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,9 +18,21 @@ class OpenApiConfig {
             .title("OMS API Document")
             .version("v1.0.0")
             .description("주문 관리 시스템(OMS) API 명세서")
+
+        val jwtSchemeName = "bearerAuth"
+        val securityRequirement = SecurityRequirement().addList(jwtSchemeName) // API에 전역 보안 요구사항 추가
+        val components = Components()
+            .addSecuritySchemes(jwtSchemeName, SecurityScheme()
+                .name(jwtSchemeName)
+                .type(SecurityScheme.Type.HTTP) // 타입: HTTP
+                .scheme("bearer") // 스킴: bearer
+                .bearerFormat("JWT") // 포맷: JWT
+            )
+
         return OpenAPI()
-            .components(Components())
+            .components(components)
             .info(info)
+            .addSecurityItem(securityRequirement)
     }
 
     @Bean
