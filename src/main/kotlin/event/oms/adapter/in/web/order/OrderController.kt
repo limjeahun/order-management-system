@@ -9,7 +9,7 @@ import event.oms.application.port.`in`.order.GetOrderListQuery
 import event.oms.application.port.`in`.order.GetOrderQuery
 import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.`in`.payment.RequestPaymentUseCase
-import event.oms.config.security.CustomUserDetails
+import event.oms.adapter.`in`.security.CustomUserDetails
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication

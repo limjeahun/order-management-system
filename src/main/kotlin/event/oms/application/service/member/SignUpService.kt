@@ -26,7 +26,7 @@ class SignUpService(
         val newMember    = Member(
             username     = command.username,
             passwordHash = hashedPassword,
-            role         = Role.ROLE_USER,
+            role         = command.role,
             createdAt    = LocalDateTime.now()
         )
         // DB 저장 + Redis 캐시

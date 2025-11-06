@@ -90,7 +90,7 @@ jwt:
   refresh-expiration-ms: 604800000
 
 # ===============================================
-# [추가] Springdoc (Swagger UI) 설정
+# Springdoc (Swagger UI) 설정
 # ===============================================
 springdoc:
   swagger-ui:

@@ -3,7 +3,7 @@ package event.oms.adapter.out.security
 
 import event.oms.application.port.`in`.member.TokenInfo
 import event.oms.application.port.out.security.TokenProviderPort
-import event.oms.config.security.CustomUserDetails
+import event.oms.adapter.`in`.security.CustomUserDetails
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders

@@ -7,7 +7,7 @@ import event.oms.application.port.`in`.member.TokenInfo
 import event.oms.application.port.out.member.LoadMemberPort
 import event.oms.application.port.out.member.ManageTokenPort
 import event.oms.application.port.out.security.TokenProviderPort
-import event.oms.config.security.CustomUserDetails
+import event.oms.adapter.`in`.security.CustomUserDetails
 import event.oms.domain.model.member.Member
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication

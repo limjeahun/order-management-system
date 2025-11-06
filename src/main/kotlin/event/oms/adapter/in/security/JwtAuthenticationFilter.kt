@@ -1,4 +1,4 @@
-package event.oms.config.security
+package event.oms.adapter.`in`.security
 
 import event.oms.adapter.out.security.JwtTokenProvider
 import jakarta.servlet.FilterChain

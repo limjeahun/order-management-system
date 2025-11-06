@@ -1,4 +1,4 @@
-package event.oms.config.security
+package event.oms.adapter.`in`.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
