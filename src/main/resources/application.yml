@@ -88,3 +88,12 @@ jwt:
   access-expiration-ms: 1800000
   # 2. Refresh Token 만료 시간 (예: 7일)
   refresh-expiration-ms: 604800000
+
+# ===============================================
+# [추가] Springdoc (Swagger UI) 설정
+# ===============================================
+springdoc:
+  swagger-ui:
+    # 이 설정을 true로 하면 Authorize 버튼의 토큰 값이
+    # 브라우저 localStorage에 저장되어 그룹을 변경해도 유지됩니다.
+    persist-authorization: true

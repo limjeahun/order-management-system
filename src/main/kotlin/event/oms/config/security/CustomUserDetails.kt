@@ -9,10 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails
 class CustomUserDetails(
     val id: Long, // 도메인 Member ID
     private val username: String,
+    private val passwordHash: String? = null,
     private val authorities: Collection<GrantedAuthority>,
 ): UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> = authorities
-    override fun getPassword(): String? = null // 민감 정보 저장 X
+    override fun getPassword(): String? = passwordHash
     override fun getUsername(): String = username
     override fun isAccountNonExpired(): Boolean = true
     override fun isAccountNonLocked(): Boolean = true

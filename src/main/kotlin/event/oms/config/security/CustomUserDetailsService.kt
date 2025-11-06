@@ -20,7 +20,8 @@ class CustomUserDetailsService(
             ?: throw UsernameNotFoundException("User not found with username: $username")
         val authorities = listOf(SimpleGrantedAuthority(member.role.name))
         // 인증 객체 생성 시 DB의 PasswordHash를 사용 (DB 비밀번호를 직접 반환)
-        return org.springframework.security.core.userdetails.User(
+        return CustomUserDetails(
+            id = member.id?: throw NoSuchElementException("잘못된 인증 정보입니다."),
             member.username,
             member.passwordHash, // [중요] DB에 저장된 해시된 비밀번호
             authorities
