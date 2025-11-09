@@ -42,7 +42,10 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // spring-data-commons 의존성 추가
     implementation("org.springframework.data:spring-data-commons")
-
+    // Kafka 의존성 추가
+    implementation("org.springframework.kafka:spring-kafka")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
+    testImplementation("org.testcontainers:kafka:1.19.8")
     // --- Spring Security ---
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
