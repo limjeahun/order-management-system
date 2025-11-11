@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductJpaRepository : JpaRepository<ProductEntity, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    // @Lock(LockModeType.PESSIMISTIC_WRITE)
     fun findAllByIdIn(ids: Collection<Long>): List<ProductEntity>
 
 }

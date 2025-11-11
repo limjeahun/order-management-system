@@ -4,6 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import jakarta.persistence.Version
 import java.math.BigDecimal
 
 @Entity
@@ -16,6 +17,8 @@ class ProductEntity(
     @Column(nullable = false)
     var price: BigDecimal,
     val stock: Int,
+    @Version
+    val version: Long = 0L
 ) {
 
 }

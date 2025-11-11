@@ -8,6 +8,8 @@ CREATE TABLE orders (
     receiver_address VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 ) engine=InnoDB;
+ALTER TABLE orders ADD COLUMN trace_id VARCHAR(36) NOT NULL UNIQUE AFTER id;
+ALTER TABLE orders ADD UNIQUE INDEX uk_trace_id (trace_id);
 
 
 CREATE TABLE order_item (
@@ -27,6 +29,9 @@ CREATE TABLE product (
     stock BIGINT NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+
+ALTER TABLE product ADD COLUMN version BIGINT NOT NULL DEFAULT 0;
+
 
 -- payment 테이블
 CREATE TABLE payment (

@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 class Order(
     val id          : Long? = null,
+    val traceId     : String,
     val memberId    : Long,
     val orderItems  : List<OrderItem>,
     var status      : OrderStatus,

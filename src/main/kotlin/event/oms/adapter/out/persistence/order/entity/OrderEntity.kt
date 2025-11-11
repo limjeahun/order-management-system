@@ -9,10 +9,16 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "orders")
 class OrderEntity(
+    @Column(name = "trace_id", unique = true, nullable = false, length = 36)
+    val traceId     : String,
+
     val memberId    : Long,
+
     @Enumerated(EnumType.STRING)
     var status      : OrderStatus,
+
     val orderDate   : LocalDateTime,
+
     @Embedded
     val receiverInfo: ReceiverInfoEmbeddable,
 ): AbstractJpaEntity() {

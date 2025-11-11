@@ -12,4 +12,9 @@ interface LoadOrderPort {
      * 회원 ID로 회원주문 목록 조회
      */
     fun findAllByMemberId(memberId: Long): List<Order>
+
+    /**
+     * traceId로 회원주문 목록 조회
+     */
+    fun findByTraceId(traceId: String): Order?
 }

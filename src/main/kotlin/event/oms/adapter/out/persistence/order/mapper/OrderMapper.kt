@@ -13,6 +13,7 @@ import event.oms.domain.model.order.ReceiverInfo
  */
 fun Order.toOrderEntity(): OrderEntity {
     return OrderEntity(
+        traceId      = traceId,
         memberId     = memberId,
         status       = status,
         orderDate    = orderDate,
@@ -48,14 +49,15 @@ fun Order.toOrderItemEntities(orderId: Long): List<OrderItemEntity> {
 fun OrderEntity.toDomain(orderItemEntities: List<OrderItemEntity>): Order {
     return Order(
         id         = id,
+        traceId    = traceId,
         memberId   = memberId,
         status     = status,
         orderDate  = orderDate,
         orderItems = orderItemEntities.map { item ->
             OrderItem(
                 productId = item.productId,
-                price = item.price,
-                quantity = item.quantity
+                price     = item.price,
+                quantity  = item.quantity
             )
         },
         receiverInfo = ReceiverInfo(

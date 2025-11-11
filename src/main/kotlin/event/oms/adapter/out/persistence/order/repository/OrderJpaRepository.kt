@@ -10,4 +10,9 @@ interface OrderJpaRepository : JpaRepository<OrderEntity, Long> {
      * 회원주문 목록 조회
      */
     fun findAllByMemberId(memberId: Long): List<OrderEntity>
+
+    /**
+     * 회원주문 상세 조회
+     */
+    fun findByTraceId(traceId: String): OrderEntity?
 }

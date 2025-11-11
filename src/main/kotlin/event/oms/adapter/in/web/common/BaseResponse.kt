@@ -44,6 +44,19 @@ data class BaseResponse<T>(
         }
 
         /**
+         * 202 Accepted 응답을 생성합니다.
+         * @param data 응답에 포함될 데이터
+         */
+        @JvmStatic
+        fun <T> accepted(data: T?): BaseResponse<T> {
+            return BaseResponse(
+                code    = HttpStatus.ACCEPTED.value(),
+                message = "리소스가 성공적으로 접수되었습니다.",
+                data    = data
+            )
+        }
+
+        /**
          * BaseResponse 객체를 ResponseEntity로 변환하는 확장 함수
          */
         fun <T> BaseResponse<T>.toResponseEntity(): ResponseEntity<BaseResponse<T>> {

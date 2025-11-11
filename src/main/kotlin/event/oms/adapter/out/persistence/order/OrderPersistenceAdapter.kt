@@ -60,5 +60,17 @@ class OrderPersistenceAdapter(
         }
     }
 
+    /**
+     * traceId로 주문 상세 조회
+     */
+    override fun findByTraceId(traceId: String): Order? {
+        return orderRepository.findByTraceId(traceId)?.let {
+            val orderItems = orderItemRepository.findByOrderId(
+                it.id?: throw NoSuchElementException("주문번호를 찾을 수 없습니다.")
+            )
+            it.toDomain(orderItems)
+        }
+    }
+
 
 }
