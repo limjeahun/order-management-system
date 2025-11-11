@@ -1,9 +1,10 @@
-package event.oms.application.port.out.member
+package event.oms.application.service.member
 
 import event.oms.adapter.out.security.JwtTokenProvider
 import event.oms.application.port.`in`.member.LoginCommand
 import event.oms.application.port.`in`.member.LoginUseCase
 import event.oms.application.port.`in`.member.TokenInfo
+import event.oms.application.port.out.member.ManageTokenPort
 import event.oms.application.port.out.security.TokenProviderPort
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder

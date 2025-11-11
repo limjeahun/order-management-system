@@ -3,6 +3,7 @@ package event.oms.adapter.`in`.kafka
 import event.oms.application.port.`in`.order.OrderCommand
 import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.out.order.SendOrderRequestPort
+import event.oms.application.port.out.trace.SaveOrderTracePort
 import event.oms.common.extensions.getLogger
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
 class OrderKafkaConsumer(
     private val orderUseCase        : OrderUseCase, // 기존 동기 주문 서비스 주입
     private val sendOrderRequestPort: SendOrderRequestPort, // DLQ 전송용
+    private val saveOrderTracePort  : SaveOrderTracePort,
 ) {
     private val log = getLogger()
 
