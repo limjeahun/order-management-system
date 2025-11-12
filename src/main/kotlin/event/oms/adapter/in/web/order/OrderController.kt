@@ -38,7 +38,7 @@ class OrderController(
     ): ResponseEntity<BaseResponse<String>> {
         // 인증된 사용자의 ID (memberId) 추출
         val userDetails = authentication.principal as? CustomUserDetails
-            ?: throw IllegalStateException("SecurityContext에 CustomUserDetails가 없습니다.")
+            ?: throw IllegalStateException("인증된 사용자의 정보가 없습니다.")
         // 1. Application 계층의 Command 객체로 변환
         val command = request.toCommand(userDetails.id)
         // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
@@ -79,6 +79,11 @@ class OrderController(
         authentication: Authentication // (개선) 본인 주문만 조회하도록
     ): ResponseEntity<BaseResponse<OrderStatusResponse>> {
         // TODO: 인증된 userDetails.id와 traceId로 조회한 order.memberId가 일치하는지 검증
+        // 인증된 사용자의 ID (memberId) 추출
+        val userDetails = authentication.principal as? CustomUserDetails
+            ?: throw IllegalStateException("인증된 사용자의 정보가 없습니다.")
+
+
         val result = getOrderByTraceQuery.getOrderSummaryByTrace(traceId)
         val response = OrderStatusResponse.from(result)
         return BaseResponse.ok(response).toResponseEntity()

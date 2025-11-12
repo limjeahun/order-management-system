@@ -3,6 +3,7 @@ package event.oms.adapter.`in`.kafka
 import event.oms.application.port.`in`.order.OrderCommand
 import event.oms.application.port.`in`.order.OrderUseCase
 import event.oms.application.port.out.order.SendOrderRequestPort
+import event.oms.application.port.out.trace.OrderTraceStatus
 import event.oms.application.port.out.trace.SaveOrderTracePort
 import event.oms.common.extensions.getLogger
 import org.springframework.kafka.annotation.KafkaListener
@@ -23,12 +24,21 @@ class OrderKafkaConsumer(
     fun handleOrderRequest(command: OrderCommand) {
         log.info("Kafka 주문 요청 수신: traceId={}", command.traceId)
         try {
-            // 컨슈머가 동기 비즈니스 로직(OrderService) 실행
+            // 1. 주문 비즈니스 로직 실행
             val createdOrder = orderUseCase.order(command)
             log.info("주문 처리 성공: traceId={}, orderId={}", command.traceId, createdOrder.id)
+            // 2. 성공: 포트를 통해 "COMPLETED" 및 "orderId" 기록
+            val status = OrderTraceStatus(
+                status = "COMPLETED",
+                orderId = createdOrder.id
+            )
+            saveOrderTracePort.save(command.traceId, status)
         }catch (e: Exception) {
             // 재고 부족(IllegalArgumentException), 동시성 충돌(IllegalStateException) 등
             log.error("주문 처리 실패: traceId={}, error={}. DLQ로 전송합니다.", command.traceId, e.message)
+            // 실패: 포트를 통해 "FAILED" 기록
+            val status = OrderTraceStatus(status = "FAILED")
+            saveOrderTracePort.save(command.traceId, status)
             // 실패한 주문은 DLQ (Dead-Letter Queue)로 전송
             sendOrderRequestPort.sendToDlq(command)
         }
