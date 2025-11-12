@@ -14,7 +14,7 @@ spring:
   # DATABASE (MySQL) CONFIGURATION
   # ===============================================
   datasource:
-    url: jdbc:mysql://localhost:3306/write_qr?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useUnicode=true
+    url: jdbc:mysql://localhost:3306/oms?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: armada
     password: armada
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -32,29 +32,35 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 100
+    open-in-view: false
 
   # ===============================================
-  # REDIS (캐시 및 토큰 저장소) CONFIGURATION
+  # Redis (Cache / Waiting Room)
+  # - docker-compose.yml의 redis-cache 서비스와 연동
   # ===============================================
   data:
     redis:
       host: localhost
       port: 6379
+      password: 1111
 
   # ===============================================
   # SPRING CACHE CONFIGURATION
   # ===============================================
   cache:
     type: redis # Spring Cache의 기본 저장소를 Redis로 설정
+    redis:
+      time-to-live: 600000 # 10분 (10 * 60 * 1000)
+      cache-null-values: false # null 값 캐시 안함
 
   # ===============================================
   # KAFKA
   # ===============================================
   kafka:
-    bootstrap-servers: localhost:9092 # [!] Docker에서 실행 중인 Kafka 주소
+    bootstrap-servers: localhost:9092 # Docker에서 실행 중인 Kafka 주소
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

@@ -29,3 +29,43 @@ services:
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # 단일 노드이므로 복제 팩터 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 # 로컬 테스트 시 리밸런싱 딜레이 제거
+
+  # 3. MySQL (데이터베이스) - [신규 추가]
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: oms # application.yml과 일치시킬 DB 이름
+      MYSQL_USER: armada # DB 사용자
+      MYSQL_PASSWORD: armada # DB 암호
+      MYSQL_ROOT_PASSWORD: 1111 # Root 암호 (필수)
+    volumes:
+      # ./sql 디렉토리를 마운트하여 컨테이너 첫 실행 시
+      #     내부의 .sql 파일 (oms.sql)을 자동으로 실행 (테이블 생성)
+      - ./sql:/docker-entrypoint-initdb.d
+      # DB 데이터를 영속적으로 저장하기 위한 볼륨
+      - mysql-data:/var/lib/mysql
+    command:
+      # 한글 처리를 위한 UTF-8 기본 설정
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  # 4. Redis (캐시/대기열) - [신규 추가]
+  redis-cache:
+    image: redis:7.2-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    command:
+      # Redis 서버 실행 시 암호 설정
+      redis-server --requirepass 1111
+    volumes:
+      # Redis 데이터를 영속적으로 저장하기 위한 볼륨
+      - redis-data:/data
+
+# 데이터 영속성을 위해 사용할 볼륨 정의
+volumes:
+  mysql-data:
+  redis-data:

@@ -39,9 +39,9 @@ class OrderController(
         // 인증된 사용자의 ID (memberId) 추출
         val userDetails = authentication.principal as? CustomUserDetails
             ?: throw IllegalStateException("인증된 사용자의 정보가 없습니다.")
-        // 1. Application 계층의 Command 객체로 변환
+        // Application 계층의 Command 객체로 변환
         val command = request.toCommand(userDetails.id)
-        // 2. Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
+        // Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
         // val createdOrder = orderUseCase.order(command)
         val traceId = requestOrderUseCase.requestOrder(command)
         return BaseResponse.accepted(traceId).toResponseEntity()
@@ -49,16 +49,16 @@ class OrderController(
 
     @GetMapping("/{orderId}")
     override fun getOrderDetails(@PathVariable orderId: Long): ResponseEntity<BaseResponse<OrderResponse>> {
-        // 1. Inbound Port(Query) 호출
+        // Inbound Port(Query) 호출
         val orderResult = getOrderQuery.getOrder(orderId)
-        // 2. Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
+        // Domain 모델을 응답 DTO로 변환하여 200 OK 응답 반환
         val response = OrderResponse.from(orderResult.order, orderResult.productNames)
         return BaseResponse.ok(response).toResponseEntity()
     }
 
     @GetMapping
     override fun getAllOrdersByMember(@RequestParam memberId: Long): ResponseEntity<BaseResponse<List<OrderResponse>>> {
-        // 1. Inbound Port(ListQuery) 호출
+        // Inbound Port(ListQuery) 호출
         val orderPairs = getOrderListQuery.getAllOrdersByMember(memberId)
         val responses = orderPairs.map { (order, productNames) ->
             OrderResponse.from(order, productNames)
@@ -76,15 +76,12 @@ class OrderController(
     @GetMapping("/by-trace/{traceId}")
     override fun getOrderStatusByTrace(
         @PathVariable traceId: String,
-        authentication: Authentication // (개선) 본인 주문만 조회하도록
+        authentication: Authentication
     ): ResponseEntity<BaseResponse<OrderStatusResponse>> {
-        // TODO: 인증된 userDetails.id와 traceId로 조회한 order.memberId가 일치하는지 검증
         // 인증된 사용자의 ID (memberId) 추출
         val userDetails = authentication.principal as? CustomUserDetails
             ?: throw IllegalStateException("인증된 사용자의 정보가 없습니다.")
-
-
-        val result = getOrderByTraceQuery.getOrderSummaryByTrace(traceId)
+        val result = getOrderByTraceQuery.getOrderSummaryByTrace(traceId, userDetails.id)
         val response = OrderStatusResponse.from(result)
         return BaseResponse.ok(response).toResponseEntity()
     }

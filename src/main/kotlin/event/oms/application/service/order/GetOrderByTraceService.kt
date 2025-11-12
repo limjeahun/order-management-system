@@ -4,8 +4,9 @@ import event.oms.application.port.`in`.order.GetOrderByTraceQuery
 import event.oms.application.port.`in`.order.OrderSummaryResult
 import event.oms.application.port.out.order.LoadOrderPort
 import event.oms.application.port.out.trace.LoadOrderTracePort
-import event.oms.application.port.out.trace.OrderTraceStatus
+import event.oms.application.port.out.trace.OrderTraceResult
 import event.oms.application.port.out.trace.SaveOrderTracePort
+import event.oms.domain.model.order.OrderTraceStatus
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,10 +15,10 @@ class GetOrderByTraceService(
     private val loadOrderTracePort: LoadOrderTracePort,
     private val saveOrderTracePort: SaveOrderTracePort,
 ): GetOrderByTraceQuery {
-    override fun getOrderSummaryByTrace(traceId: String): OrderSummaryResult {
+    override fun getOrderSummaryByTrace(traceId: String, memberId: Long): OrderSummaryResult {
         try {
             // 1. Redis(캐시)에서 상태 조회
-            val cachedStatus = loadOrderTracePort.findByTraceId(traceId)
+            val cachedStatus = loadOrderTracePort.findByTraceId(traceId, memberId)
             if (cachedStatus != null) {
                 // 1-1. 캐시 히트
                 return OrderSummaryResult(
@@ -29,21 +30,25 @@ class GetOrderByTraceService(
             // 2. 캐시 미스 (DB로 Fallback)
             val order = loadOrderPort.findByTraceId(traceId)
                 ?: return OrderSummaryResult(
-                    status  = "PROCESSING",
+                    status  = OrderTraceStatus.PROCESSING,
                     orderId = null,
                     traceId = traceId
                 )
             // 3. DB 조회 결과를 다시 캐시에 저장 (Write-back)
-            val statusToCache = OrderTraceStatus(status = "COMPLETED", orderId = order.id)
-            saveOrderTracePort.save(traceId, statusToCache)
+            val statusToCache = OrderTraceResult(status = OrderTraceStatus.COMPLETED, orderId = order.id)
+            saveOrderTracePort.save(traceId, memberId, statusToCache)
             // 4. 주문 존재 시
             return OrderSummaryResult(
-                status  = "COMPLETED",
+                status  = OrderTraceStatus.COMPLETED,
                 orderId = order.id,
                 traceId = traceId,
             )
         }catch (e: Exception) {
-            return OrderSummaryResult(status = "ERROR", orderId = null, traceId = traceId)
+            return OrderSummaryResult(
+                status  = OrderTraceStatus.ERROR,
+                orderId = null,
+                traceId = traceId
+            )
         }
     }
 

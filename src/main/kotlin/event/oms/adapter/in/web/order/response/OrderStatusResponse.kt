@@ -1,9 +1,10 @@
 package event.oms.adapter.`in`.web.order.response
 
 import event.oms.application.port.`in`.order.OrderSummaryResult
+import event.oms.domain.model.order.OrderTraceStatus
 
 data class OrderStatusResponse(
-    val status : String,
+    val status : OrderTraceStatus,
     val orderId: Long,
     val traceId: String,
 ) {

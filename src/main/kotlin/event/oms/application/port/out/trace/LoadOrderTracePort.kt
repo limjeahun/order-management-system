@@ -4,5 +4,5 @@ interface LoadOrderTracePort {
     /**
      * traceId로 주문 추적 상태를 조회.
      */
-    fun findByTraceId(traceId: String): OrderTraceStatus?
+    fun findByTraceId(traceId: String, memberId: Long): OrderTraceResult?
 }
