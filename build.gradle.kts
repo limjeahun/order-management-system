@@ -42,6 +42,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // spring-data-commons 의존성 추가
     implementation("org.springframework.data:spring-data-commons")
+    // Jackson Kotlin 모듈 추가
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     // Kafka 의존성 추가
     implementation("org.springframework.kafka:spring-kafka")
     testImplementation("org.springframework.kafka:spring-kafka-test")
