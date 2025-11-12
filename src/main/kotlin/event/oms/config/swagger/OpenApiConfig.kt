@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 class OpenApiConfig {
     @Bean
     fun openAPI(): OpenAPI {
-        // http://localhost:8080/swagger-ui.html 로 접속
+        // http://localhost:8080/swagger-ui/index.html 로 접속
         val info = Info()
             .title("OMS API Document")
             .version("v1.0.0")

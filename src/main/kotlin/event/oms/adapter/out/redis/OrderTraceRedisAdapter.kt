@@ -20,7 +20,7 @@ class OrderTraceRedisAdapter(
     override fun save(traceId: String, memberId: Long, status: OrderTraceResult) {
         val key = "$TRACE_KEY_PREFIX$traceId:$memberId"
         val statusMap = mapOf(
-            "status" to status.status,
+            "status" to status.status.name,
             "orderId" to status.orderId
         ).filterValues { it != null } // orderId가 null이면 맵에서 제외
 

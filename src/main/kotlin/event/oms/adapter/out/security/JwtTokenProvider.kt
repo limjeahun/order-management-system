@@ -49,7 +49,7 @@ class JwtTokenProvider(
      * 1. Access Token 생성 (짧은 만료 시간, 권한 정보 포함)
      */
     private fun createAccessToken(authentication: Authentication): String {
-        val authorities: String = authentication.authorities.map { it.authority }.joinToString(",")
+        val authorities: String = authentication.authorities.joinToString(",") { it.authority }
         val principal = authentication.principal as CustomUserDetails
         val now = Date()
         val expirationDate = Date(now.time + accessExpirationMs)

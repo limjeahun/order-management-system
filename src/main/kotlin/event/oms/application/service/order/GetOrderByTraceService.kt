@@ -6,6 +6,7 @@ import event.oms.application.port.out.order.LoadOrderPort
 import event.oms.application.port.out.trace.LoadOrderTracePort
 import event.oms.application.port.out.trace.OrderTraceResult
 import event.oms.application.port.out.trace.SaveOrderTracePort
+import event.oms.common.extensions.getLogger
 import event.oms.domain.model.order.OrderTraceStatus
 import org.springframework.stereotype.Service
 
@@ -15,10 +16,13 @@ class GetOrderByTraceService(
     private val loadOrderTracePort: LoadOrderTracePort,
     private val saveOrderTracePort: SaveOrderTracePort,
 ): GetOrderByTraceQuery {
+    private val log = getLogger()
+
     override fun getOrderSummaryByTrace(traceId: String, memberId: Long): OrderSummaryResult {
         try {
             // 1. Redis(캐시)에서 상태 조회
             val cachedStatus = loadOrderTracePort.findByTraceId(traceId, memberId)
+            log.info("cachedStatus 정보 = {}", cachedStatus)
             if (cachedStatus != null) {
                 // 1-1. 캐시 히트
                 return OrderSummaryResult(

@@ -106,8 +106,8 @@ logging:
 # ===============================================
 jwt:
   secret: "e797405a6215dd7429420de078b350e198c5031cd3625d6ffce6bf63f0bc4089"
-  # 1. Access Token 만료 시간 (예: 30분)
-  access-expiration-ms: 1800000
+  # 1. Access Token 만료 시간 (예: 30분 -> 300분)
+  access-expiration-ms: 18000000
   # 2. Refresh Token 만료 시간 (예: 7일)
   refresh-expiration-ms: 604800000
 
