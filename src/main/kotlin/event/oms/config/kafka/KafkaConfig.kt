@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder
 
 @Configuration
 class KafkaConfig {
-    @Value("\${promotion.oder-topic}")
+    @Value("\${promotion.order-topic}")
     private lateinit var orderTopic: String
 
     @Value("\${promotion.dlq-topic}")

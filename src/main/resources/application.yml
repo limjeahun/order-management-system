@@ -45,7 +45,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: 1111
+      # password: 1111
 
   # ===============================================
   # SPRING CACHE CONFIGURATION
