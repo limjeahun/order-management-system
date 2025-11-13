@@ -44,7 +44,7 @@ class OrderConcurrencyIntegrationTest @Autowired constructor(
     private val productRepository: ProductJpaRepository,
 ) {
     private val log = getLogger()
-    private val firstProductId  = 5312040002L
+    private val firstProductId  = 5312040005L
     private val secondProductId = 5312040003L
     private val thirdProductId  = 5312040004L
 
@@ -66,8 +66,8 @@ class OrderConcurrencyIntegrationTest @Autowired constructor(
     @DisplayName("재고가 N개일 때 N명이 동시에 주문하면, 재고는 0개가 되어야 한다")
     @WithMockCustomUser(id = 1L, username = "armada") // 테스트용 인증 유저 주입
     fun `should handle concurrent order requests correctly when stock is limited`() {
-        // given: 100명의 동시 사용자, 10개의 재고
-        val threadCount = 1000
+        // given: N명의 동시 사용자, N개의 재고
+        val threadCount = 2000
 
         // 1.메인 스레드에서 인증 정보 미리 가져오기
         val authentication = SecurityContextHolder.getContext().authentication
@@ -77,7 +77,7 @@ class OrderConcurrencyIntegrationTest @Autowired constructor(
         // productRepository.save(ProductEntity(productId, "동시성 테스트 상품", BigDecimal(1000), stockCount, 0L))
 
         // 2. 동시성 테스트 도구 준비
-        val executor  = Executors.newFixedThreadPool(threadCount)
+        val executor  = Executors.newFixedThreadPool(30)
         val startGate = CountDownLatch(1) // 모든 스레드가 동시에 출발하도록 막는 '문'
         val endGate   = CountDownLatch(threadCount) // 모든 스레드가 끝날 때까지 대기하는 '문'
 
@@ -173,7 +173,7 @@ class OrderConcurrencyIntegrationTest @Autowired constructor(
         log.info("상품3 최종 재고: ${thirdProduct.stock} (성공: $successCount)")
 
         //assertEquals(0, failedCount, "주문 실패 발생")
-        
+
 
     }
 
