@@ -9,10 +9,11 @@ import event.oms.domain.model.product.Product
  */
 fun Product.toEntity(): ProductEntity {
     return ProductEntity(
-        id    = id,
-        name  = name,
-        price = price,
-        stock = stock,
+        id      = id,
+        name    = name,
+        price   = price,
+        stock   = stock,
+        version = version,
     )
 }
 
@@ -22,9 +23,10 @@ fun Product.toEntity(): ProductEntity {
  */
 fun ProductEntity.toDomain(): Product {
     return Product(
-        id    = id,
-        name  = name,
-        price = price,
-        stock = stock,
+        id      = id,
+        name    = name,
+        price   = price,
+        stock   = stock,
+        version = version,
     )
 }

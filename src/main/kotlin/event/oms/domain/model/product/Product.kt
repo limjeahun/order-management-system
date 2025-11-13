@@ -10,6 +10,7 @@ class Product(
     var name : String,
     var price: BigDecimal,
     var stock: Int,
+    val version: Long,
 ) {
 
     /**

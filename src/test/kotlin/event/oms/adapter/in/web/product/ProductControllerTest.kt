@@ -51,6 +51,7 @@ internal class ProductControllerTest @Autowired constructor (
             name = request.name,
             price = request.price,
             stock = request.stock,
+            version = 0L
         )
         given(addProductUseCase.addProduct(expectedCommand)).willReturn(createdProductDomain)
 
@@ -115,6 +116,7 @@ internal class ProductControllerTest @Autowired constructor (
             name  = request.name,
             price = request.price,
             stock = request.stock,
+            version = 0L
         )
         given(updateProductUseCase.updateProduct(expectedCommand)).willReturn(updateProductDomain)
 

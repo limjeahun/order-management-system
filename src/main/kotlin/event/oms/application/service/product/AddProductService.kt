@@ -14,10 +14,11 @@ class AddProductService(
 ) : AddProductUseCase {
     override fun addProduct(command: AddProductCommand): Product {
         val newProduct = Product(
-            id    = command.id,
-            name  = command.name,
-            price = command.price,
-            stock = command.stock,
+            id      = command.id,
+            name    = command.name,
+            price   = command.price,
+            stock   = command.stock,
+            version = 0L,
         )
         return saveProductPort.save(newProduct)
     }

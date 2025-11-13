@@ -61,7 +61,7 @@ class OrderKafkaConsumer(
             // 재고 부족(IllegalArgumentException), 동시성 충돌(IllegalStateException) 등
             log.error("주문 처리 실패: traceId={}, error={}. DLQ로 전송합니다.", command.traceId, e.message)
             // 실패: 포트를 통해 "FAILED" 기록
-            val status = OrderTraceResult(status = OrderTraceStatus.ERROR)
+            val status = OrderTraceResult(status = OrderTraceStatus.FAILED)
             saveOrderTracePort.save(command.traceId, command.memberId, status)
             // 실패한 주문은 DLQ (Dead-Letter Queue)로 전송
             sendOrderRequestPort.sendToDlq(command)
