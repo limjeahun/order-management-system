@@ -1,4 +1,4 @@
-package event.oms.adapter.`in`.web.order.response
+package event.oms.adapter.`in`.web.payment.response
 
 import event.oms.application.port.`in`.payment.PaymentRequestResult
 import io.swagger.v3.oas.annotations.media.Schema

@@ -51,7 +51,8 @@ dependencies {
     // --- Spring Security ---
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
-
+    // 비동기 테스트를 위한 Awaitility 추가
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.1")
     // --- JWT (Java JWT: jjwt) ---
     val jwtVersion = "0.12.5" // 최신 버전 사용
     implementation("io.jsonwebtoken:jjwt-api:${jwtVersion}")

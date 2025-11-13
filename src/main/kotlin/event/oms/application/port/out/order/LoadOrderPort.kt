@@ -9,6 +9,11 @@ interface LoadOrderPort {
     fun findOrderById(orderId: Long): Order
 
     /**
+     * 주문, 회원 ID로 주문 조회
+     */
+    fun findByIdAndMemberId(orderId: Long, memberId: Long): Order
+
+    /**
      * 회원 ID로 회원주문 목록 조회
      */
     fun findAllByMemberId(memberId: Long): List<Order>

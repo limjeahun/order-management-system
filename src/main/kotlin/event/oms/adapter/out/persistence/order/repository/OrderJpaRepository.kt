@@ -15,4 +15,9 @@ interface OrderJpaRepository : JpaRepository<OrderEntity, Long> {
      * 회원주문 상세 조회
      */
     fun findByTraceId(traceId: String): OrderEntity?
+
+    /**
+     * 주문, 회원 ID로 주문 조회
+     */
+    fun findByIdAndMemberId (orderId: Long, memberId: Long): OrderEntity?
 }

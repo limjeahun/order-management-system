@@ -42,6 +42,16 @@ class OrderPersistenceAdapter(
     }
 
     /**
+     * 주문, 회원 ID로 주문 조회
+     */
+    override fun findByIdAndMemberId(orderId: Long, memberId: Long): Order {
+        val orderJpaEntity = orderRepository.findByIdAndMemberId(orderId, memberId)
+            ?: throw NoSuchElementException("주문을 찾을 수 없습니다: $orderId")
+        val orderItemJpaEntities = orderItemRepository.findByOrderId(orderId)
+        return orderJpaEntity.toDomain(orderItemJpaEntities)
+    }
+
+    /**
      * 회원주문 목록 조회
      */
     override fun findAllByMemberId(memberId: Long): List<Order> {

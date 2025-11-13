@@ -1,14 +1,24 @@
 package event.oms.adapter.`in`.web.payment
 
+import event.oms.adapter.`in`.web.common.BaseResponse
+import event.oms.adapter.`in`.web.payment.response.PaymentRequestResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import java.math.BigDecimal
 
 
 @Tag(name = "Payment Callback API", description = "결제 콜백 처리 API")
 interface PaymentSpec {
+    @Operation(summary = " 주문 결제 요청", description = "시스템에 등록된 주문 정보를 확인 후 결제 요청을합니다.")
+    fun requestOrderPayment(
+        @Parameter(description = "결제할 주문 ID")
+        orderId: Long,
+        authentication: Authentication,
+    ): ResponseEntity<BaseResponse<PaymentRequestResponse>>
+
     @Operation(summary = "Toss Payments 결제 성공 콜백", description = "Toss Payments 에서 사용자가 결제를 성공적으로 완료한 후 호출되는 Redirect URL")
     fun handleTossSuccessCallback(
         @Parameter(description = "Toss에서 발급한 결제 키")

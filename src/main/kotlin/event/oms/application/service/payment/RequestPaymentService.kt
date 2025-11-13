@@ -34,10 +34,8 @@ class RequestPaymentService(
             throw IllegalStateException("이미 처리되었거나 결제할 수 없는 주문입니다.")
         }
 
-        val amount = order.orderItems.sumOf { it.price.multiply(BigDecimal.valueOf(it.quantity.toLong())) }
-        val orderName = order.orderItems.firstOrNull()?.let {
-            if (order.orderItems.size > 1) "${it.productId} 외 ${order.orderItems.size - 1}건" else "${it.productId}"
-        } ?: "주문 상품 없음"
+        val amount = order.getTotalPrice()
+        val orderName = order.getOrderName()
 
         val baseUrl = "http://localhost:${serverPort}${contextPath}".removeSuffix("/")
         val successUrl = "$baseUrl/api/v1/payments/toss/success"

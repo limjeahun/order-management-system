@@ -4,7 +4,7 @@ import event.oms.adapter.`in`.web.common.BaseResponse
 import event.oms.adapter.`in`.web.common.BaseResponse.Companion.toResponseEntity
 import event.oms.adapter.`in`.web.order.request.OrderRequest
 import event.oms.adapter.`in`.web.order.response.OrderResponse
-import event.oms.adapter.`in`.web.order.response.PaymentRequestResponse
+import event.oms.adapter.`in`.web.payment.response.PaymentRequestResponse
 import event.oms.application.port.`in`.payment.RequestPaymentUseCase
 import event.oms.adapter.`in`.security.CustomUserDetails
 import event.oms.adapter.`in`.web.order.response.OrderStatusResponse
@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/orders")
 class OrderController(
-    private val orderUseCase         : OrderUseCase,
     private val requestOrderUseCase  : RequestOrderUseCase,
     private val getOrderQuery        : GetOrderQuery,
     private val getOrderListQuery    : GetOrderListQuery,
-    private val requestPaymentUseCase: RequestPaymentUseCase,
     private val getOrderByTraceQuery : GetOrderByTraceQuery,
     ): OrderSpec {
     @PostMapping
@@ -42,7 +40,6 @@ class OrderController(
         // Application 계층의 Command 객체로 변환
         val command = request.toCommand(userDetails.id)
         // Inbound Port(UseCase) 호출하여 비즈니스 로직 실행
-        // val createdOrder = orderUseCase.order(command)
         val traceId = requestOrderUseCase.requestOrder(command)
         return BaseResponse.accepted(traceId).toResponseEntity()
     }
@@ -63,13 +60,6 @@ class OrderController(
         val responses = orderPairs.map { (order, productNames) ->
             OrderResponse.from(order, productNames)
         }
-        return BaseResponse.ok(responses).toResponseEntity()
-    }
-
-    @PostMapping("/{orderId}/request-payment")
-    override fun requestOrderPayment(@PathVariable orderId: Long): ResponseEntity<BaseResponse<PaymentRequestResponse>> {
-        val result = requestPaymentUseCase.requestPayment(orderId)
-        val responses = PaymentRequestResponse.from(result)
         return BaseResponse.ok(responses).toResponseEntity()
     }
 

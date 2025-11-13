@@ -1,21 +1,31 @@
 package event.oms.adapter.`in`.web.payment
 
+import event.oms.adapter.`in`.web.common.BaseResponse
+import event.oms.adapter.`in`.web.common.BaseResponse.Companion.toResponseEntity
+import event.oms.adapter.`in`.web.payment.response.PaymentRequestResponse
 import event.oms.application.port.`in`.payment.ConfirmPaymentCommand
 import event.oms.application.port.`in`.payment.ConfirmPaymentUseCase
+import event.oms.application.port.`in`.payment.RequestPaymentUseCase
 import event.oms.common.extensions.getLogger
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 
 @RestController
 @RequestMapping("/api/v1/payments/toss")
 class TossPaymentController(
     private val confirmPaymentUseCase: ConfirmPaymentUseCase,
+    private val requestPaymentUseCase: RequestPaymentUseCase,
 ): PaymentSpec {
     private val log = getLogger()
+
+    @PostMapping("/{orderId}/request-payment")
+    override fun requestOrderPayment(@PathVariable orderId: Long, authentication: Authentication): ResponseEntity<BaseResponse<PaymentRequestResponse>> {
+        val result = requestPaymentUseCase.requestPayment(orderId)
+        val responses = PaymentRequestResponse.from(result)
+        return BaseResponse.ok(responses).toResponseEntity()
+    }
 
     @GetMapping("/success")
     override fun handleTossSuccessCallback(
